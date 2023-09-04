@@ -62,9 +62,11 @@ def upload_files(request):
         fs = FileSystemStorage()
         filename = fs.save(f'Utils/files_to_upload/{current_time}_{uploaded_file.name}', uploaded_file)
         full_path = os.path.join(os.getcwd(), 'files_to_upload')
+        full_path2 = os.path.join(os.getcwd(), 'Utils')
+        full_path3 = os.path.join(full_path2, "files_to_upload")
 
-        for file in os.listdir(full_path):
-            file_path = os.path.join(full_path, file)
+        for file in os.listdir(full_path3):
+            file_path = os.path.join(full_path3, file)
             result = check_extensions(file)
             try:
                 user = User.objects.get(username=request.user)
