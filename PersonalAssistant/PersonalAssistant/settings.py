@@ -20,8 +20,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = ''
 
+SECRET_KEY = 'django-insecure-e1z0@v$k*h$#ts2n3t*%q7xw)ofvy7%c#gy)l*)hr0e3n)bflm'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -80,14 +80,13 @@ WSGI_APPLICATION = 'PersonalAssistant.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': '',
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '',
-        'PORT': '',
+        'NAME': 'Django_team_3',
+        'USER': 'postgres',
+        'PASSWORD': '567234',
+        'HOST': '195.201.150.230',
+        'PORT': '5433',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

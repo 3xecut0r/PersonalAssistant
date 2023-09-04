@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Contact Search</title>
+</head>
+<body>
+    <h2>Contact Search</h2>
+    <form method="get">
+        <input type="text" name="q" value="{{ query }}" placeholder="Search contacts">
+        <button type="submit">Search</button>
+    </form>
+    
+    <h3>Search Results for "{{ query }}"</h3>
+    <ul>
+        {% for contact in results %}
+            <li>{{ contact.name }} - {{ contact.email }} - {{ contact.phone_number }}</li>
+        {% empty %}
+            <li>No results found</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
