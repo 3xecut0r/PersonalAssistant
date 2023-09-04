@@ -6,6 +6,9 @@ name = "pypi"
 [packages]
 django = "*"
 psycopg2-binary = "*"
+requests = "*"
+django-ipware = "*"
+geopy = "*"
 
 [dev-packages]
 

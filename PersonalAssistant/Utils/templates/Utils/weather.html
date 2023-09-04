@@ -1,0 +1,24 @@
+{% extends "Contacts/base.html" %}
+
+{% block content %}
+    <h1 class="text-center">Weather in {{ city }}</h1>
+
+    <div class="row">
+        {% for weather_entry in weather_data|slice:":8" %}
+            <div class="col-md-3 {% if forloop.last %}mr-3{% endif %}">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ weather_entry.day_of_week }}</h5>
+                        <p class="card-text">Temperature: {{ weather_entry.temp }}°C</p>
+                        <p class="card-text">Wind speed: {{ weather_entry.wind_spd }} м/с</p>
+                        <p class="card-text">Description: {{ weather_entry.weather.description }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    {% if status %}
+        <p>Статус: {{ status }}</p>
+    {% endif %}
+{% endblock %}
