@@ -12,7 +12,8 @@ from Notes.models import Tag, Note
 
 
 def main(request):
-    ...
+    context = {}
+    return render(request, "index.html", context)
 
 
 @method_decorator(login_required, name="dispatch")
@@ -25,8 +26,8 @@ class BaseNoteView(View):
 
 class NoteView(BaseNoteView):
     notes_per_page = 10
-    template_name = "notes/notes.html"
-    template_add = "notes/add_note.html"
+    template_name = "index.html"
+    template_add = "add_note.html"
     form_class = NoteForm
     search_form_class = NoteSearchForm
 
@@ -46,7 +47,7 @@ class NoteView(BaseNoteView):
         else:
             return self.handle_note_creation(request)
 
-    def _search_notes(self, request, form):
+    def search_notes(self, request, form):
         search_query = form.cleaned_data["search"]
         include_tags = form.cleaned_data["include_tags"]
         exclude_tags = form.cleaned_data["exclude_tags"]
@@ -69,11 +70,27 @@ class NoteView(BaseNoteView):
 
     def handle_search(self, request):
         form = self.search_form_class(request.POST)
-        notes = (
-            self._search_notes(request, form)
-            if form.is_valid()
-            else self.model.objects.none()
-        )
+
+        if form.is_valid():
+            search_query = form.cleaned_data["search"]
+            include_tags = form.cleaned_data["include_tags"]
+            exclude_tags = form.cleaned_data["exclude_tags"]
+
+            include_tags_list = include_tags.split(",") if include_tags else []
+            exclude_tags_list = exclude_tags.split(",") if exclude_tags else []
+
+            notes = self.model.objects.filter(user=request.user)
+
+            if search_query:
+                notes = notes.filter(title__icontains=search_query)
+
+            if include_tags_list:
+                notes = notes.filter(tags__name__in=include_tags_list)
+
+            if exclude_tags_list:
+                notes = notes.exclude(tags__name__in=exclude_tags_list)
+        else:
+            notes = self.model.objects.none()
 
         paginator = Paginator(notes, self.notes_per_page)
 
@@ -124,30 +141,12 @@ class NoteView(BaseNoteView):
                 return render(request, self.template_name, context)
 
         # Redirect to the main notes page after successful note creation
-        return redirect("note:index")
-
-
-class NoteSearchView(BaseNoteView):
-    template_name = "notes/search_notes.html"
-
-    def get(self, request):
-        return render(request, self.template_name, {"form": self.search_form_class()})
-
-    def post(self, request):
-        form = self.search_form_class(request.POST)
-        notes = (
-            self._search_notes(request, form)
-            if form.is_valid()
-            else self.model.objects.none()
-        )
-
-        context = {"notes": notes, "form": form}
-        return render(request, self.template_name, context)
+        return redirect("notes:index")
 
 
 class NoteUpdateView(BaseNoteView):
     form_class = NoteForm
-    template_name = "notes/edit_note.html"
+    template_name = "edit_note.html"
     context_object_name = "note"
 
     def get_queryset(self):
@@ -160,7 +159,7 @@ class NoteUpdateView(BaseNoteView):
 
 class NoteRemoveView(BaseNoteView):
     model = Note
-    template_name = "notes/confirm_delete.html"
+    template_name = "confirm_delete.html"
     context_object_name = "note"
     success_url = reverse_lazy("note:index")
 
@@ -169,7 +168,7 @@ class NoteRemoveView(BaseNoteView):
 
 
 class TagView(BaseNoteView):
-    template_name = "note/add_tags.html"
+    template_name = "add_tags.html"
     form_class = TagForm
     model = Tag
 
@@ -186,4 +185,4 @@ class TagView(BaseNoteView):
         tag.user = request.user
         tag.save()
 
-        return redirect(to="note:index")
+        return redirect(to="notes:index")

@@ -1,0 +1,19 @@
+<!-- templates/notes/search_notes.html -->
+{% extends 'Contacts/base.html' %}
+
+{% block content %}
+<h1>Search Notes</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Search">
+</form>
+
+{% if notes %}
+<ul>
+    {% for note in notes %}
+    <li>{{ note.title }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endblock %}
