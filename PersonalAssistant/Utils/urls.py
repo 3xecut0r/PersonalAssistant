@@ -9,3 +9,4 @@ urlpatterns = [
     path('documents/', views.show_user_documents, name="show_documents"),
     path('unknown/', views.show_user_unknown, name="show_unknown")
 ]
+
