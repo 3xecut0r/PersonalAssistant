@@ -5,8 +5,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from .forms import RegisterForm, LoginForm
 
-from Utils.views import create_user_folders
-from Utils.models import UserFiles
+from Utils.views import create_dropbox_folders
+
 
 def signupuser(request):
     if request.user.is_authenticated:
@@ -18,9 +18,7 @@ def signupuser(request):
             form.save()
             username = form.cleaned_data['username']
             user = User.objects.get(username=username)
-            create_user_folders(user_id=user.id)
-            user_files = UserFiles(user_id=user.id)
-            user_files.save()
+            create_dropbox_folders(user_id=user.id)
             return redirect(to='contacts:start_page')
         else:
             return render(request, 'Users/signup.html', context={"form": form})

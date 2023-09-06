@@ -1,38 +1,32 @@
 import os
-import cloudinary.api
-import cloudinary.uploader
+
+import dropbox
 from django.contrib.auth.decorators import login_required
-
 from django.core.files.storage import FileSystemStorage
-
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
-from django.utils import timezone
+
 from dotenv import load_dotenv
 
-
-from .models import UserFiles
+from .models import UploadedUserFiles
 
 load_dotenv()
 
-cloudinary.config(cloud_name=os.environ.get('cloud_name'),
-    api_key=os.environ.get('api_key'),
-                  api_secret=os.environ.get('api_secret'))
 
 extensions = {'Images': ['jpeg', 'png', 'jpg', 'svg'],
               "Documents": ['doc', 'docx', 'txt', 'pdf', 'xlsx', 'pptx'],
               "Unknown": []}
 
+access_token = os.environ.get('ACCESS_TOKEN')
+dbx = dropbox.Dropbox(access_token)
 
-def exception(func):
-    def wrapper(*args, **kwargs):
-        try:
-            result = func(*args, **kwargs)
-            return result
-        except Exception as e:
-            print(e)
-            return redirect('/base')
-    return wrapper
+def create_dropbox_folders(user_id):
+    user_1_folder_path = f'/User_{user_id}'
+    try:
+        dbx.files_create_folder(user_1_folder_path)
+        print(f'Створено папку {user_1_folder_path}')
+    except dropbox.exceptions.ApiError as e:
+        print(f'Помилка при створенні папки {user_1_folder_path}: {e}')
 
 
 def check_extensions(file):
@@ -42,26 +36,13 @@ def check_extensions(file):
             return key
     return "Unknown"
 
-@exception
-def create_user_folders(user_id=1):
-    user_folder_name = f"user_{user_id}"
-    cloudinary.api.create_folder(user_folder_name)
-    image_folder_name = f"{user_folder_name}/Images"
-    cloudinary.api.create_folder(image_folder_name)
-    documents_folder_name = f"{user_folder_name}/Documents"
-    cloudinary.api.create_folder(documents_folder_name)
-    unknown_folder_name = f"{user_folder_name}/Unknown"
-    cloudinary.api.create_folder(unknown_folder_name)
-
 
 @login_required
 def upload_files(request):
     if request.method == 'POST':
-        current_time = timezone.now().strftime("%Y%m%d%H%M%S")
         uploaded_file = request.FILES['file']
         fs = FileSystemStorage()
-        filename = fs.save(f'Utils/files_to_upload/{current_time}_{uploaded_file.name}', uploaded_file)
-        full_path = os.path.join(os.getcwd(), 'files_to_upload')
+        filename = fs.save(f'Utils/files_to_upload/{uploaded_file}', uploaded_file)
         full_path2 = os.path.join(os.getcwd(), 'Utils')
         full_path3 = os.path.join(full_path2, "files_to_upload")
 
@@ -70,33 +51,38 @@ def upload_files(request):
             result = check_extensions(file)
             try:
                 user = User.objects.get(username=request.user)
-                folder_path = f'user_{user.id}/{result}'
-                upload = cloudinary.uploader.upload(file_path, folder=folder_path)
-                public_url = upload['secure_url']
-                user_file = UserFiles.objects.get(user_id=user.id)
-                res = user_file.Image
-                if res is None:
-                    res = []
-                res.append(public_url)
-                user_file.Image = res
+                with open(file_path, 'rb') as f:
+                    folder_path = f'user_{user.id}/{result}'
+                    dbx_file = dbx.files_upload(f.read(), f'/{folder_path}/{file}')
+                public_url = dbx.sharing_create_shared_link(path=dbx_file.path_display)
+                user_file = UploadedUserFiles(href=public_url.url, type=file, category=result, user=user)
                 user_file.save()
                 os.remove(file_path)
                 return redirect('/base')
             except Exception as e:
                 print(e)
-    return render(request, 'Utils/upload_files.html')
+    return render(request, 'Utils/upload.html')
 
-
+@login_required
 def show_user_images(request):
-    pass
+    user_files = UploadedUserFiles.objects.filter(user_id=request.user.id, category='Images')
+    href_list = [file.href for file in user_files if file.href]
+    context = {'href_list': href_list}
+    return render(request, 'Utils/show_images.html', context)
 
 
 def show_user_documents(request):
-    pass
+    user_files = UploadedUserFiles.objects.filter(user_id=request.user.id, category='Documents')
+    href_list = [file.href for file in user_files if file.href]
+    context = {'href_list': href_list}
+    return render(request, 'Utils/show_documents.html', context)
 
 
 def show_user_unknown(request):
-    pass
+    user_files = UploadedUserFiles.objects.filter(user_id=request.user.id, category='Unknown')
+    href_list = [file.href for file in user_files if file.href]
+    context = {'href_list': href_list}
+    return render(request, 'Utils/show_else.html', context)
 
 
 def remove_user_file(request):

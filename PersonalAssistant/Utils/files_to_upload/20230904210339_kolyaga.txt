@@ -1,8 +1,0 @@
-https://zbmk.zp.ua/wp-login.php 
-method="post"
-<a href="https://zbmk.zp.ua/wp-login.php?action=lostpassword">Втратили свій пароль?</a>	
-zmk_zp07@ukr.net
-
-
-https:\/\/zbmk.zp.ua\/wp-includes\/js\/zxcvbn.min.js
-{"ajax":{"url":"\/wp-admin\/admin-ajax.php"}};
