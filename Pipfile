@@ -9,6 +9,7 @@ psycopg2-binary = "*"
 faker = "*"
 cloudinary = "*"
 python-dotenv = "*"
+dropbox = "*"
 
 [dev-packages]
 

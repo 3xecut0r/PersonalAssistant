@@ -60,7 +60,7 @@ def create_folders_for_user(id = 3):
 
 @exception
 def upload_file(folders: dict):
-    full_path = os.path.join(os.getcwd(), 'files_to_upload')
+    full_path = os.path.join(os.getcwd(), '../Utils/files_to_upload')
     for file in os.listdir(full_path):
         result = check_extensions(file)
         try:
