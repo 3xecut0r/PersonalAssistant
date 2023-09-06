@@ -11,6 +11,7 @@ def get_day_of_week(date_str):
 
     return date_obj.strftime('%A')
 
+
 def weather_forcast(request):
     api_key = "e0968fa8d191445689837cc732013dd4"
     client_ip, is_routable = get_client_ip(request)
