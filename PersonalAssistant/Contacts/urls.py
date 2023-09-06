@@ -5,7 +5,7 @@ from .views import add_contact
 from .views import contact_search
 from .views import edit_contact
 from .views import delete_contact
-
+from .views import contact_list
 
 urlpatterns = [
     path('base/', start_page, name="start_page"), 
@@ -14,5 +14,6 @@ urlpatterns = [
     path('contact_search/', contact_search, name='contact_search'),
     path('edit_contact/<int:contact_id>/', edit_contact, name='edit_contact'),
     path('delete_contact/<int:contact_id>/', delete_contact, name='delete_contact'),
+    path('contacts/', contact_list, name='contact_list'),
 ]
 

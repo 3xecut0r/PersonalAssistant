@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Contact List</title>
+</head>
+<body>
+    <h2>Contact List</h2>
+    <ul>
+        {% for contact in contacts %}
+            <li>
+                {{ contact.name }} - {{ contact.phone_number }} - {{ contact.email }}
+            </li>
+            <p>{{ contact.name }} - <a href="{% url 'edit_contact' contact.id %}">Редактировать контакт</a></p>
+        {% empty %}
+            <li>No contacts found</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
