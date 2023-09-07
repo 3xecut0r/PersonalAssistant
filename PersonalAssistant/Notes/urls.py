@@ -26,6 +26,6 @@ urlpatterns = [
         "tag/<str:tag>", views.NoteSearchView.as_view(), name="search-tags"
     ),  # этот путь может быть не нужен, так как мы используем POST для поиска
     path("add-tag/", views.TagView.as_view(), name="add-tags"),
-    path("accounts/login/", LoginView.as_view(), name="login"),
+    # path("accounts/login/", LoginView.as_view(), name="login"),
     # path("fake-login/", fake_login, name="fake-login"),
 ]

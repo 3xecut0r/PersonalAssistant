@@ -106,14 +106,20 @@ class NoteSearchView(BaseNoteView):
         include_tags = form.cleaned_data.get("include_tags", "").split(",")
         exclude_tags = form.cleaned_data.get("exclude_tags", "").split(",")
 
-        notes = self.get_queryset().filter(title__icontains=search_query)
+        notes = (
+            self.get_queryset()
+            .filter(title__icontains=search_query)
+            .order_by("-created_at")
+        )
+        print(notes.query)
+
         if include_tags:
             notes = notes.filter(tags__name__in=include_tags)
         if exclude_tags:
             notes = notes.exclude(tags__name__in=exclude_tags)
 
         paginator = Paginator(notes, self.notes_per_page)
-        context = self.get_context(form)
+        context = self.get_context(form=form)
         context["page_obj"] = paginator.get_page(request.GET.get("page"))
 
         return render(request, self.template_name, context)
@@ -161,8 +167,11 @@ class TagView(BaseNoteView):
             return render(request, self.template_name, {"form": form})
 
         tag = form.save(commit=False)
-        # tag.user = request.user
         tag.user = request.user
-        tag.save()
 
-        return redirect(to="notes:index")
+        try:
+            tag.save()
+            return redirect(to="notes:index")
+        except IntegrityError:
+            form.add_error(None, "Tag with this name already exists for the user.")
+            return render(request, self.template_name, {"form": form})

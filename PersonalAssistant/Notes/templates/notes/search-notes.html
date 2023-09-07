@@ -9,11 +9,16 @@
     <input type="submit" value="Search">
 </form>
 
-{% if notes %}
-<ul>
-    {% for note in notes %}
-    <li>{{ note.title }}</li>
-    {% endfor %}
-</ul>
+{% if page_obj %}
+    <p>We have notes!</p>
+    {% if page_obj.object_list %}
+    <ul>
+        {% for note in page_obj.object_list %}
+        <li>{{ note.title }}</li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>No matching results found.</p>
+    {% endif %}
 {% endif %}
 {% endblock %}

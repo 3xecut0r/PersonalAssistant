@@ -24,7 +24,7 @@ class TagForm(ModelForm):
 
 
 class NoteForm(ModelForm):
-    tags = ModelMultipleChoiceField(queryset=Tag.objects.none())
+    tags = ModelMultipleChoiceField(queryset=Tag.objects.none(), required=False)
 
     class Meta:
         model = Note
