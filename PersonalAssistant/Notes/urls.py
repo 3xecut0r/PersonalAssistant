@@ -1,11 +1,12 @@
 from django.urls import path
+from django.contrib.auth.views import LoginView
 from . import views
 
 from django.http import HttpResponse
 
 
-def fake_login(request):
-    return HttpResponse("Fake login page. No actual login functionality.")
+# def fake_login(request):
+#     return HttpResponse("Fake login page. No actual login functionality.")
 
 
 app_name = "notes"
@@ -25,5 +26,6 @@ urlpatterns = [
         "tag/<str:tag>", views.NoteSearchView.as_view(), name="search-tags"
     ),  # этот путь может быть не нужен, так как мы используем POST для поиска
     path("add-tag/", views.TagView.as_view(), name="add-tags"),
-    path("fake-login/", fake_login, name="fake-login"),
+    path("accounts/login/", LoginView.as_view(), name="login"),
+    # path("fake-login/", fake_login, name="fake-login"),
 ]

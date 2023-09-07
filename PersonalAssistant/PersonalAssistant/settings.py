@@ -28,6 +28,9 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
+# LOGIN_URL = "/fake-login/"
+
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -43,12 +46,17 @@ INSTALLED_APPS = [
     "Users",
 ]
 
+TEST_APPS = [
+    "Notes.tests",  # Здесь также замените 'yourapp' на название вашего Django приложения
+]
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "Notes.middleware.AutoLoginMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
