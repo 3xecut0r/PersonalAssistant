@@ -2,10 +2,13 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db import IntegrityError
 from django.db.models import Count
+from django.http import HttpResponseRedirect
 
 from django.shortcuts import render, redirect
 from django.utils.decorators import method_decorator
 from django.views.generic import View
+from django.views.generic.edit import UpdateView
+
 from django.urls import reverse_lazy, reverse
 
 from Notes.forms import NoteForm, TagForm, NoteSearchForm
@@ -13,7 +16,9 @@ from Notes.models import Tag, Note
 
 
 def main(request):
-    return render(request, "notes/index.html")
+    notes = Note.objects.filter(user=request.user)
+    context = {"notes": notes}
+    return render(request, "Notes/index.html", context)
 
 
 @method_decorator(login_required, name="dispatch")
@@ -103,8 +108,7 @@ class NoteSearchView(BaseNoteView):
             return render(request, self.template_name, self.get_context())
 
         search_query = form.cleaned_data.get("search", "")
-        # include_tags = form.cleaned_data.get("include_tags", "").split(",")
-        # exclude_tags = form.cleaned_data.get("exclude_tags", "").split(",")
+
         include_tags = [
             tag.strip()
             for tag in form.cleaned_data.get("include_tags", "").split(",")
@@ -116,18 +120,20 @@ class NoteSearchView(BaseNoteView):
             if tag.strip()
         ]
 
-        notes = (
-            self.get_queryset()
-            .filter(title__icontains=search_query)
-            .order_by("-created_at")
-        )
+        notes = self.get_queryset().filter().order_by("-created_at")
         # print(notes.query)
         print(notes.all())
 
-        if include_tags:
-            notes = notes.filter(tags__name__in=include_tags)
-        if exclude_tags:
-            notes = notes.exclude(tags__name__in=exclude_tags)
+        # Если не указаны критерии поиска, вернуть последние 10 записей
+        if not (search_query or include_tags or exclude_tags):
+            notes = notes[:10]
+        else:
+            if search_query:
+                notes = notes.filter(title__icontains=search_query)
+            if include_tags:
+                notes = notes.filter(tags__name__in=include_tags)
+            if exclude_tags:
+                notes = notes.exclude(tags__name__in=exclude_tags)
 
         paginator = Paginator(notes, self.notes_per_page)
         context = self.get_context(form=form)
@@ -136,12 +142,17 @@ class NoteSearchView(BaseNoteView):
         return render(request, self.template_name, context)
 
 
-class NoteUpdateView(BaseNoteView):
+class NoteUpdateView(BaseNoteView, UpdateView):
     form_class = NoteForm
     template_name = "notes/edit-note.html"
 
     def get_success_url(self):
         return reverse_lazy("notes:index")
+
+    def get_form_kwargs(self):
+        kwargs = super(NoteUpdateView, self).get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
 
 
 class NoteRemoveView(BaseNoteView):
@@ -151,16 +162,28 @@ class NoteRemoveView(BaseNoteView):
         # Тут мы просто отображаем страницу подтверждения
         return render(request, self.template_name)
 
+    # def post(self, request, *args, **kwargs):
+    #     # Когда пользователь подтверждает удаление
+    #     note_id = kwargs.get(
+    #         "pk"
+    #     )  # Предположим, что идентификатор передается как часть URL
+    #     note = self.get_queryset().get(pk=note_id)
+    #     note.delete()
+
     def post(self, request, *args, **kwargs):
         # Когда пользователь подтверждает удаление
         note_id = kwargs.get(
             "pk"
         )  # Предположим, что идентификатор передается как часть URL
-        note = self.get_queryset().get(pk=note_id)
-        note.delete()
+        try:
+            note = self.get_queryset().get(pk=note_id)
+            note.delete()
+        except Note.DoesNotExist:
+            # Можно добавить сообщение об ошибке или просто перенаправить на главную
+            pass
 
-        # return HttpResponseRedirect(reverse("notes:index"))
-        return reverse("notes:index")
+        return HttpResponseRedirect(reverse("notes:index"))
+        # return reverse("notes:index")
 
 
 class TagView(BaseNoteView):
