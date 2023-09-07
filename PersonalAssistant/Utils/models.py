@@ -7,4 +7,5 @@ class UploadedUserFiles(models.Model):
     href = models.CharField(max_length=1000, blank=True, null=True)
     type = models.CharField(max_length=1000, blank=True, null=True)
     category = models.CharField(max_length=1000, blank=True, null=True)
+    file_id = models.CharField(max_length=1000, blank=True, null=True, default=None)
     user = ForeignKey(User, on_delete=models.CASCADE)

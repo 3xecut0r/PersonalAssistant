@@ -6,7 +6,9 @@
 <body>
     <h2>Images list:</h2>
     {% for href in href_list %}
-        <img src="{{ href }}" alt="Картинка">
+        <div>
+            <img src='{{ href }}' alt="Картинка" class="img-responsive" width="178px">
+        </div>
     {% endfor %}
 </body>
 </html>

@@ -5,8 +5,12 @@
 </head>
 <body>
     <h2>Documents list:</h2>
-    {% for href in href_list %}
-        <img src="{{ href }}" alt="Картинка">
+    {% for document in user_documents %}
+    <div class="document-block">
+        <p>Document</p>
+        <a href="{% url 'utils:delete' document.id %}" role="button" class="contrast"> Delete </a>
+        <a href="{% url 'utils:download' document.id %}" role="button" class="contrast"> Download</a>
+    </div>
     {% endfor %}
 </body>
 </html>
