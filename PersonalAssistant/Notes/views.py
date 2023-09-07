@@ -103,15 +103,26 @@ class NoteSearchView(BaseNoteView):
             return render(request, self.template_name, self.get_context())
 
         search_query = form.cleaned_data.get("search", "")
-        include_tags = form.cleaned_data.get("include_tags", "").split(",")
-        exclude_tags = form.cleaned_data.get("exclude_tags", "").split(",")
+        # include_tags = form.cleaned_data.get("include_tags", "").split(",")
+        # exclude_tags = form.cleaned_data.get("exclude_tags", "").split(",")
+        include_tags = [
+            tag.strip()
+            for tag in form.cleaned_data.get("include_tags", "").split(",")
+            if tag.strip()
+        ]
+        exclude_tags = [
+            tag.strip()
+            for tag in form.cleaned_data.get("exclude_tags", "").split(",")
+            if tag.strip()
+        ]
 
         notes = (
             self.get_queryset()
             .filter(title__icontains=search_query)
             .order_by("-created_at")
         )
-        print(notes.query)
+        # print(notes.query)
+        print(notes.all())
 
         if include_tags:
             notes = notes.filter(tags__name__in=include_tags)

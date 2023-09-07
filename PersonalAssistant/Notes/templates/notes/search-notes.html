@@ -1,5 +1,6 @@
 <!-- templates/notes/search_notes.html -->
-{% extends 'Contacts/base.html' %}
+{% extends 'notes/base.html' %}
+
 
 {% block content %}
 <h1>Search Notes</h1>
@@ -14,7 +15,15 @@
     {% if page_obj.object_list %}
     <ul>
         {% for note in page_obj.object_list %}
-        <li>{{ note.title }}</li>
+        <li>
+            <!-- {{ note.title }} -->
+            {{ note.title }} - {{ note.content }}
+            <br>User: {{ note.user.username }}
+            <br>Tags:
+            {% for tag in note.tags.all %}
+            {{ tag.name }}{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+        </li>
         {% endfor %}
     </ul>
     {% else %}

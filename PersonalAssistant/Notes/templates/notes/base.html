@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'Notes/style.css' %}">
+    <title>PersonalAssistant</title>
+</head>
+
+<body>
+    {% block content %}
+
+    <nav class="navbar" style="background-color: lightblue;">
+        <form class="container-fluid justify-content-end">
+            <button class="btn btn-outline-success me-2" type="button">Profile</button>
+            <button class="btn btn-sm btn-outline-secondary" type="button">Logout</button>
+        </form>
+    </nav>
+    <br>
+    <br>
+    <div class="card" style="width: 18rem;">
+        <a class="nav-link active" href="#">
+            <div class="card-body">
+                <h5 class="card-title">Contacts</h5>
+                <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
+                    card's content.</p>
+            </div>
+        </a>
+    </div>
+    <br>
+
+    <div class="card" style="width: 18rem;">
+        <a class="nav-link active" href="#">
+            <div class="card-body">
+                <h5 class="card-title">Notes</h5>
+                <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
+                    card's content.</p>
+            </div>
+        </a>
+    </div>
+
+    <br>
+    <div class="card" style="width: 18rem;">
+        <a class="nav-link active" href="#">
+            <div class="card-body">
+                <h5 class="card-title">Files</h5>
+                <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
+                    card's content.</p>
+            </div>
+        </a>
+    </div>
+
+    <!--        <ul class="nav flex-column">-->
+    <!--          <li class="nav-item">-->
+    <!--            <a class="nav-link active" aria-current="page" href="#">Contacts</a>-->
+    <!--          </li>-->
+    <!--          <li class="nav-item">-->
+    <!--            <a class="nav-link" href="#">Notes</a>-->
+    <!--          </li>-->
+    <!--          <li class="nav-item">-->
+    <!--            <a class="nav-link" href="#">Files</a>-->
+    <!--          </li>-->
+    <!--        </ul>-->
+    <footer>
+        <p>&copy; 2023 Ваша компанія. Усі права захищено.</p>
+    </footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-Eh5Ea2D6l7n2BH0pEAF/Q/5+SQTRzfMwXkW3Q5Dt5KxlTZ7B1B1F0Rf8MsjIU9xG"
+    crossorigin="anonymous"></script>
+    {% endblock %}
+</body>
+
+</html>
