@@ -7,13 +7,4 @@
 <p><a href="{% url 'notes:add-tags' %}">Add Tags</a></p>
 <p><a href="{% url 'notes:search-notes' %}">Search Notes</a></p>
 
-<ul>
-    {% for note in notes %}
-    <li>
-        {{ note }} <!-- Это будет использовать метод __str__ для отображения превью -->
-        <a href="{% url 'notes:edit' note.id %}">Edit</a>
-        <a href="{% url 'notes:remove' note.id %}">Remove</a>
-    </li>
-    {% endfor %}
-</ul>
 {% endblock %}

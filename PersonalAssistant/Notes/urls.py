@@ -22,8 +22,8 @@ urlpatterns = [
     path(
         "search/", views.NoteSearchView.as_view(), name="search-notes"
     ),  # новый путь для поиска
-    path(
-        "tag/<str:tag>", views.NoteSearchView.as_view(), name="search-tags"
-    ),  # этот путь может быть не нужен, так как мы используем POST для поиска
+    # path(
+    #     "tag/<str:tag>", views.NoteSearchView.as_view(), name="search-tags"
+    # ),  # этот путь может быть не нужен, так как мы используем POST для поиска
     path("add-tag/", views.TagView.as_view(), name="add-tags"),
 ]
