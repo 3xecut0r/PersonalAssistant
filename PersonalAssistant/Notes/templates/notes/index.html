@@ -3,7 +3,7 @@
 
 {% block content %}
 <h1>Welcome to your Notes</h1>
-<p><a href="{% url 'add-note' %}">Add Note</a></p>
-<p><a href="{% url 'search-notes' %}">Search Notes</a></p>
-<p><a href="{% url 'add-tags' %}">Add Tags</a></p>
+<p><a href="{% url 'notes:add-note' %}">Add Note</a></p>
+<p><a href="{% url 'notes:search-notes' %}">Search Notes</a></p>
+<p><a href="{% url 'notes:add-tags' %}">Add Tags</a></p>
 {% endblock %}

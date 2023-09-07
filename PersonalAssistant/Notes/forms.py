@@ -32,6 +32,8 @@ class NoteForm(ModelForm):
 
     def __init__(self, user: User, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        # self.user = User.objects.get(id=1)  # Временное жесткое присвоение пользователя
+        # self.fields["tags"].queryset = Tag.objects.filter(user=self.user)
         self.user = user
         self.fields["tags"].queryset = Tag.objects.filter(user=self.user)
 
