@@ -72,9 +72,23 @@ def delete_contact(request, contact_id):
 
 
 # список всех контактов из базы данных
-def contact_list(request):
+# def contact_list(request):
     
+#     contacts = Contact.objects.all()
+
+#     context = {
+#         'contacts': contacts,
+#     }
+
+#     return render(request, 'contacts/contact_list.html', context)
+
+
+
+def contact_list(request):
     contacts = Contact.objects.all()
+
+    for contact in contacts:
+        contact.days_until_birthday = days_until_birthday(contact.birthday)
 
     context = {
         'contacts': contacts,
@@ -84,15 +98,12 @@ def contact_list(request):
 
 
 
-def calculate_days_until_birthday(birthday):
+
+
+def days_until_birthday(birthday):
     today = date.today()
-    
-    # Проверяем, есть ли день рождения в этом году или следующем году
     next_birthday = birthday.replace(year=today.year)
-    if next_birthday < today:
+    if today > next_birthday:
         next_birthday = next_birthday.replace(year=today.year + 1)
-    
-    # Рассчитываем количество дней до дня рождения
-    days_until_birthday = (next_birthday - today).days
-    
-    return days_until_birthday
+    days_left = (next_birthday - today).days
+    return days_left

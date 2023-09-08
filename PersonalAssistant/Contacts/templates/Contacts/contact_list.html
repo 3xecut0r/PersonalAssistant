@@ -10,6 +10,9 @@
             <li>
                 {{ contact.name }} - {{ contact.phone_number }} - {{ contact.email }}
             </li>
+            <li>
+                Days left to birthday: {{ contact.days_until_birthday }} days
+            </li>
             <p>{{ contact.name }} - <a href="{% url 'edit_contact' contact.id %}">Редактировать контакт</a></p>
         {% empty %}
             <li>No contacts found</li>
