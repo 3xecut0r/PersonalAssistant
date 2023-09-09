@@ -29,7 +29,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['65fa-77-65-104-119.ngrok-free.app', 'localhost']
 
 
 # LOGIN_URL = "/fake-login/"
@@ -48,10 +48,6 @@ INSTALLED_APPS = [
     "Notes",
     "Utils",
     "Users",
-]
-
-TEST_APPS = [
-    "Notes.tests",  # Здесь также замените 'yourapp' на название вашего Django приложения
 ]
 
 MIDDLEWARE = [

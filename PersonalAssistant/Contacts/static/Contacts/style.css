@@ -11,3 +11,19 @@ footer {
 .card {
     margin-left: 40px;
 }
+
+/* Отступы между карточками */
+.card-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px; /* Отступ между карточками */
+}
+
+/* Стили для карточки погоды */
+.weather-card {
+    width: 18rem;
+    /* Дополнительные стили карточки */
+}
+.weather-container {
+    margin-top: 20px;
+}

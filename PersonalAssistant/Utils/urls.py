@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 
+
 app_name = 'utils'
 
 urlpatterns = [
@@ -12,5 +13,6 @@ urlpatterns = [
     path('delete/<int:file_id>', views.remove_user_file, name="delete"),
     path('authorize/', views.dropbox_oauth, name='dropbox_oauth'),
     path('authorized/', views.dropbox_authorized, name='dropbox_authorized'),
+    path('weather/', views.weather_forcast, name="get_weather"),
 ]
 
