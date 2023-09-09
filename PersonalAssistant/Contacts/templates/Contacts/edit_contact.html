@@ -1,0 +1,22 @@
+{% extends "Contacts/base.html" %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Contact</title>
+</head>
+<body>
+    
+
+    {% block content %}
+        <h2>Edit Contact</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Сохранить изменения</button>
+        </form>
+        <br>
+        <a href="{% url 'contact_list' %}">Вернуться к списку контактов</a>
+    {% endblock %}
+</body>
+</html>
+

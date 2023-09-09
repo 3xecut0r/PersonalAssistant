@@ -9,6 +9,10 @@ psycopg2-binary = "*"
 requests = "*"
 django-ipware = "*"
 geopy = "*"
+faker = "*"
+cloudinary = "*"
+python-dotenv = "*"
+dropbox = "*"
 
 [dev-packages]
 
