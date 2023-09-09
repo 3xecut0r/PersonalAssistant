@@ -27,9 +27,9 @@ DROPBOX_APP_SECRET = os.environ.get("DROPBOX_APP_SECRET")
 REDIRECT_URL = 'http://127.0.0.1:8000/utils/'
 
 cloudinary.config(
-  cloud_name = "dsjusqa4p",
-  api_key = "599877185773136",
-  api_secret = "VFeBRMltUi1d8Jz_aCwOGLF4b8k"
+  cloud_name = os.environ.get('cloud_name'),
+  api_key = os.environ.get('api_key '),
+  api_secret = os.environ.get('api_secret ')
 )
 
 extensions = {'Images': ['jpeg', 'png', 'jpg', 'svg'],
