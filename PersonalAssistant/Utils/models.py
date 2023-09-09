@@ -9,3 +9,4 @@ class UploadedUserFiles(models.Model):
     category = models.CharField(max_length=1000, blank=True, null=True)
     file_id = models.CharField(max_length=1000, blank=True, null=True, default=None)
     user = ForeignKey(User, on_delete=models.CASCADE)
+    dbx = models.CharField(max_length=1000, blank=True, null=True, default=None)
