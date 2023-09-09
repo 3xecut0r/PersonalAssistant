@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import ContactForm
 from django.shortcuts import render, HttpResponse
@@ -55,14 +56,15 @@ def card_subtitle_view(request):
 
 
 
-#добавление контактов 
+@login_required
 def add_contact(request):
     if request.method == 'POST':
         form = ContactForm(request.POST)
         if form.is_valid():
             form.save()
-            res = Contact.objects.get(name=form.name)
-            res.user_id = request.user
+            email = form.cleaned_data['email']
+            res = Contact.objects.get(email=email)
+            res.user_id = request.user.id
             res.save()
             return redirect('contacts:contact_list')  # Перенаправление на страницу со списком контактов
     else:
@@ -71,12 +73,13 @@ def add_contact(request):
 
 
 #поиск контактов среди контактов книги
+@login_required
 def contact_search(request):
     query = request.GET.get('q')  # Получение поискового запроса из URL
 
     if query:
         # Если есть поисковый запрос, выполните поиск в модели Contact
-        results = Contact.objects.filter(name__icontains=query)
+        results = Contact.objects.filter(name__icontains=query, user_id=request.user.id)
     else:
         results = []
 
@@ -88,6 +91,8 @@ def contact_search(request):
 
 
 # редактирование контактов
+
+@login_required
 def edit_contact(request, contact_id):
     contact = get_object_or_404(Contact, id=contact_id)
 
@@ -101,7 +106,7 @@ def edit_contact(request, contact_id):
 
     return render(request, 'contacts/edit_contact.html', {'form': form})
 
-
+@login_required
 def delete_contact(request, contact_id):
     contact = get_object_or_404(Contact, id=contact_id)
 
@@ -128,10 +133,9 @@ def delete_contact(request, contact_id):
 #     return render(request, 'contacts/contact_list.html', context)
 
 
-
+@login_required
 def contact_list(request):
-    contacts = Contact.objects.all()
-
+    contacts = Contact.objects.filter(user_id=request.user.id)
     for contact in contacts:
         contact.days_until_birthday = days_until_birthday(contact.birthday)
 

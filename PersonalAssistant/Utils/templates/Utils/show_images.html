@@ -5,9 +5,11 @@
 </head>
 <body>
     <h2>Images list:</h2>
-    {% for href in href_list %}
+    {% for image in user_images %}
         <div>
-            <img src='{{ href }}' alt="Картинка" class="img-responsive" width="178px">
+            <img src='{{ image.href }}' alt="Картинка" class="img-responsive" width="178px">
+            <a href="{% url 'utils:delete' image.id %}" role="button" class="contrast"> Delete </a>
+            <a href="{% url 'utils:download' image.id %}" role="button" class="contrast"> Download</a>
         </div>
     {% endfor %}
 </body>

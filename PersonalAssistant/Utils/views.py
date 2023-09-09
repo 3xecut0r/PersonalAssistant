@@ -28,8 +28,8 @@ REDIRECT_URL = 'http://127.0.0.1:8000/utils/'
 
 cloudinary.config(
   cloud_name=os.environ.get('cloud_name'),
-  api_key=os.environ.get('api_key '),
-  api_secret=os.environ.get('api_secret ')
+  api_key=os.environ.get('api_key'),
+  api_secret=os.environ.get('api_secret')
 )
 
 extensions = {'Images': ['jpeg', 'png', 'jpg', 'svg'],
@@ -40,13 +40,13 @@ access_token = os.environ.get('ACCESS_TOKEN')
 
 
 def get_current_datetime_string():
-    current_datetime = datetime.datetime.now()
-    return current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+    current_datetime = datetime.now()
+    return current_datetime.strftime("%Y-%m-%d--%H-%M-%S__")
 
 
 def check_time_difference(datetime_str, path):
-    current_datetime = datetime.datetime.now()
-    provided_datetime = datetime.datetime.strptime(datetime_str, "%Y-%m-%d %H:%M:%S")
+    current_datetime = datetime.now()
+    provided_datetime = datetime.strptime(datetime_str, "%Y-%m-%d--%H-%M-%S")
     time_difference = current_datetime - provided_datetime
     if time_difference.total_seconds() > 60:
         os.remove(path)
@@ -75,7 +75,8 @@ def create_dropbox_folders(request, user_id):
 
 @login_required
 def upload_files(request):
-    dbx = get_access_dbx(request)
+
+
     if request.method == 'POST':
         uploaded_file = request.FILES['file']
 
@@ -86,30 +87,39 @@ def upload_files(request):
         filename = fs.save(f'Utils/files_to_upload/{uploaded_file}', uploaded_file)
         full_path2 = os.path.join(os.getcwd(), 'Utils')
         full_path3 = os.path.join(full_path2, "files_to_upload")
-
         for file in os.listdir(full_path3):
             file_path = os.path.join(full_path3, file)
             result = check_extensions(file)
-            print(result)
             try:
+                fi = 'None'
                 user = User.objects.get(username=request.user)
                 if result == 'Images':
-                    folder_path = 'user_10/Images'
+                    folder_path = f'user_{request.user.id}/Images'
                     path = os.path.join(os.getcwd(), "Utils")
                     path = os.path.join(path, "files_to_upload")
                     upload = cloudinary.uploader.upload(os.path.join(path, file), folder=folder_path)
                     file_url = upload["secure_url"]
                     file_id = upload["public_id"]
+                    fi = file_id
                     user_file = UploadedUserFiles(href=file_url, type=file, category=result,file_id=file_id, user=user)
                     user_file.save()
-                    return redirect('/base')
                 with open(file_path, 'rb') as f:
+                    dbx = get_access_dbx(request)
                     folder_path = f'user_{user.id}/{result}'
                     dbx_file = dbx.files_upload(f.read(), f'/{folder_path}/{file}')
                 public_url = dbx.sharing_create_shared_link_with_settings(path=dbx_file.path_display)
+                try:
+                    file_get = UploadedUserFiles.objects.get(file_id=fi)
+                    if file_get:
+                        file_get.dbx = f'/User_{request.user.id}/{result}/{file}'
+                        file_get.save()
+                        os.remove(file_path)
+                        return redirect('/base')
+                except:
+                    print('EMPTY!')
                 user_file = UploadedUserFiles(href=public_url.url, type=file, category=result, user=user)
                 user_file.save()
-                os.remove(file_path)
+                # os.remove(file_path)
                 return redirect('/base')
             except Exception as e:
                 print(e)
@@ -118,9 +128,8 @@ def upload_files(request):
 
 @login_required
 def show_user_images(request):
-    user_files = UploadedUserFiles.objects.filter(user_id=request.user.id, category='Images')
-    href_list = [file.href for file in user_files if file.href]
-    context = {'href_list': href_list}
+    user_images = UploadedUserFiles.objects.filter(user_id=request.user.id, category='Images')
+    context = {'user_images': user_images}
     return render(request, 'Utils/show_images.html', context)
 
 
@@ -134,8 +143,7 @@ def show_user_documents(request):
 @login_required
 def show_user_unknown(request):
     user_files = UploadedUserFiles.objects.filter(user_id=request.user.id, category='Unknown')
-    href_list = [file.href for file in user_files if file.href]
-    context = {'href_list': href_list}
+    context = {'user_files': user_files}
     return render(request, 'Utils/show_else.html', context)
 
 
@@ -143,37 +151,43 @@ def show_user_unknown(request):
 def remove_user_file(request, file_id):
         dbx = get_access_dbx(request)
         file = UploadedUserFiles.objects.get(id=file_id)
-        if file.file_id:
-            cloudinary.api.delete_resources([file_id])
-            return HttpResponse('Done')
+        category = file.category
+        path = f'/User_{file.user_id}/{file.category}/{file.type}'
+        print(path)
         dbx.files_delete_v2(f'/User_{file.user_id}/{file.category}/{file.type}')
         file.delete()
-        return HttpResponse('Done')
+        if category == "Images":
+            return redirect('utils:show_images')
+        elif category == "Documents":
+            return redirect('utils:show_documents')
+        else:
+            return redirect('utils:show_unknown')
 
 
 @login_required
 def download_user_file(request, file_id):
-
     dbx = get_access_dbx(request)
     file = UploadedUserFiles.objects.get(id=file_id)
-    dropbox_file_path = (f'/User_{file.user_id}/{file.category}/{file.type}')
+    if file.dbx:
+        dropbox_file_path = file.dbx
+    else:
+        dropbox_file_path = (f'/User_{file.user_id}/{file.category}/{file.type}')
     path = os.path.join(os.getcwd(), 'Utils')
     local_file_path = os.path.join(path, "downloaded")
-    # for file in local_file_path:
-    #     dayt = file.split('//')[0]
-    #     check_time_difference(dayt, f'{local_file_path}/{file}')
+    for fil in os.listdir(local_file_path):
+        res = fil.split('__')[0]
+        check_time_difference(res, os.path.join(local_file_path, fil))
     if not os.path.exists(local_file_path):
         os.makedirs(local_file_path)
         print('Folder not exist')
-    metadata, res = dbx.files_download(dropbox_file_path)
-    name = f'{get_current_datetime_string()}//{metadata.name}'
-
-    with open(f'{local_file_path}/{metadata.name}', 'wb') as f:
-        f.write(res.content)
-
-    file_path = f'{local_file_path}/{metadata.name}'
+    else:
+        metadata, res = dbx.files_download(dropbox_file_path)
+        new_name = get_current_datetime_string()+metadata.name
+        with open(f'{local_file_path}/{new_name}', 'wb') as f:
+            f.write(res.content)
+    file_path = f'{local_file_path}/{new_name}'
     response = FileResponse(open(file_path, 'rb'))
-    response['Content-Disposition'] = f'attachment; filename="{metadata.name}"'
+    response['Content-Disposition'] = f'attachment; filename="{file.type}"'
     return response
 
 
@@ -264,3 +278,4 @@ def weather_forcast(request):
     else:
         pass
     return render(request, 'Utils/weather.html')
+
