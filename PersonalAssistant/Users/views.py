@@ -18,7 +18,7 @@ def signupuser(request):
             form.save()
             username = form.cleaned_data['username']
             user = User.objects.get(username=username)
-            create_dropbox_folders(user_id=user.id)
+            create_dropbox_folders(request, user_id=user.id)
             return redirect(to='contacts:start_page')
         else:
             return render(request, 'Users/signup.html', context={"form": form})

@@ -3,7 +3,7 @@
 {% block content %}
 <div class="container">
     <h2>Завантажити файл</h2>
-    <form method="post" enctype="multipart/form-data" action="{% url 'upload_files' %}">
+    <form method="post" enctype="multipart/form-data" action="{% url 'utils:upload' %}">
         {% csrf_token %}
         <div class="form-group">
             <label for="file">Оберіть файл:</label>
