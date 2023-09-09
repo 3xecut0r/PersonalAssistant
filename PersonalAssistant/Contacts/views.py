@@ -10,6 +10,7 @@ def start_page(request):
     context = {}
     return render(request, 'Contacts/base.html', context)
 
+  
 def card_subtitle_view(request):
     return render(request, 'Contacts/card_subtitle.html')
 
@@ -107,3 +108,4 @@ def days_until_birthday(birthday):
         next_birthday = next_birthday.replace(year=today.year + 1)
     days_left = (next_birthday - today).days
     return days_left
+

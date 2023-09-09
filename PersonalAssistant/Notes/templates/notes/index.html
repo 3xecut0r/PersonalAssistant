@@ -1,0 +1,10 @@
+<!-- templates/main.html -->
+{% extends 'notes/base.html' %}
+
+{% block content %}
+<h1>Welcome to your Notes</h1>
+<p><a href="{% url 'notes:add-note' %}">Add Note</a></p>
+<p><a href="{% url 'notes:add-tags' %}">Add Tags</a></p>
+<p><a href="{% url 'notes:search-notes' %}">Search Notes</a></p>
+
+{% endblock %}

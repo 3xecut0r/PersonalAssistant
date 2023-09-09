@@ -1,4 +1,5 @@
 from django.urls import path
+
 from .views import start_page
 from . import views
 from .views import add_contact
@@ -6,6 +7,9 @@ from .views import contact_search
 from .views import edit_contact
 from .views import delete_contact
 from .views import contact_list
+
+
+app_name = 'contacts'
 
 urlpatterns = [
     path('base/', start_page, name="start_page"), 
@@ -16,4 +20,3 @@ urlpatterns = [
     path('delete_contact/<int:contact_id>/', delete_contact, name='delete_contact'),
     path('contacts/', contact_list, name='contact_list'),
 ]
-
