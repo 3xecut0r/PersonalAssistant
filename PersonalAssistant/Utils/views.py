@@ -27,9 +27,9 @@ DROPBOX_APP_SECRET = os.environ.get("DROPBOX_APP_SECRET")
 REDIRECT_URL = 'http://127.0.0.1:8000/utils/'
 
 cloudinary.config(
-  cloud_name = os.environ.get('cloud_name'),
-  api_key = os.environ.get('api_key '),
-  api_secret = os.environ.get('api_secret ')
+  cloud_name=os.environ.get('cloud_name'),
+  api_key=os.environ.get('api_key '),
+  api_secret=os.environ.get('api_secret ')
 )
 
 extensions = {'Images': ['jpeg', 'png', 'jpg', 'svg'],
@@ -37,6 +37,7 @@ extensions = {'Images': ['jpeg', 'png', 'jpg', 'svg'],
               "Unknown": []}
 
 access_token = os.environ.get('ACCESS_TOKEN')
+
 
 def get_current_datetime_string():
     current_datetime = datetime.datetime.now()
@@ -137,6 +138,7 @@ def show_user_unknown(request):
     context = {'href_list': href_list}
     return render(request, 'Utils/show_else.html', context)
 
+
 @login_required
 def remove_user_file(request, file_id):
         dbx = get_access_dbx(request)
@@ -147,8 +149,6 @@ def remove_user_file(request, file_id):
         dbx.files_delete_v2(f'/User_{file.user_id}/{file.category}/{file.type}')
         file.delete()
         return HttpResponse('Done')
-
-
 
 
 @login_required
@@ -177,17 +177,17 @@ def download_user_file(request, file_id):
     return response
 
 
-
 def dropbox_oauth(request):
     print('!!!!!!Auth Started !!!!!!!!!!!')
     return redirect(f'https://www.dropbox.com/oauth2/authorize?client_id={DROPBOX_APP_KEY}&redirect_uri={REDIRECT_URL}authorized&response_type=code')
+
 
 def get_access_token():
     with open('OAuth_token.json', 'r') as file:
         data = json.load(file)
         date = data.get('datetime')
-        date_dt_obj = datetime.datetime.strptime(date, "%Y-%m-%d %H:%M")
-        curent_time = datetime.datetime.now()
+        date_dt_obj = datetime.strptime(date, "%Y-%m-%d %H:%M")
+        curent_time = datetime.now()
         delta = ((curent_time - date_dt_obj).total_seconds()) / 60 / 60
         print(delta)
         if delta > 3:
@@ -211,6 +211,7 @@ def get_access_dbx(request):
 
     return dbx
 
+
 def dropbox_authorized(request):
     try:
         code = request.GET["code"]
@@ -224,12 +225,11 @@ def dropbox_authorized(request):
     }, auth=(DROPBOX_APP_KEY, DROPBOX_APP_SECRET))
     request.session["DROPBOX_ACCESS_TOKEN"] = data.json()["access_token"]
     with open('OAuth_token.json', 'w') as file:
-        json.dump({"datetime":datetime.datetime.now().strftime("%Y-%m-%d %H:%M"), "token": data.json()["access_token"]}, file, indent=4, ensure_ascii=False)
+        json.dump({"datetime": datetime.now().strftime("%Y-%m-%d %H:%M"), "token": data.json()["access_token"]}, file, indent=4, ensure_ascii=False)
 
     return redirect(to="/base")
   
-  
-  
+
 def get_day_of_week(date_str):
     date_obj = datetime.strptime(date_str, '%Y-%m-%d')
 
@@ -237,7 +237,7 @@ def get_day_of_week(date_str):
 
 
 def weather_forcast(request):
-    api_key = "e0968fa8d191445689837cc732013dd4"
+    api_ = "e0968fa8d191445689837cc732013dd4"
     client_ip, is_routable = get_client_ip(request)
     if client_ip:
         request_url = f'https://geolocation-db.com/jsonp/{client_ip}'
@@ -247,11 +247,10 @@ def weather_forcast(request):
         result = json.loads(result)
         if response:
             city = result.get('city')
-            url = f'https://api.weatherbit.io/v2.0/forecast/daily?city={city}&key={api_key}'
+            url = f'https://api.weatherbit.io/v2.0/forecast/daily?city={city}&key={api_}'
             try:
                 data = requests.get(url).json()
                 weather_data = data['data']
-
 
                 for entry in weather_data:
                     entry['day_of_week'] = get_day_of_week(entry['valid_date'])

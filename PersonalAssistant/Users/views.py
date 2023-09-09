@@ -9,8 +9,8 @@ from Utils.views import create_dropbox_folders
 
 
 def signupuser(request):
-    if request.user.is_authenticated:
-        return redirect(to='contacts:start_page')
+    # if request.user.is_authenticated:
+    #     return redirect(to='contacts:start_page')
 
     if request.method == 'POST':
         form = RegisterForm(request.POST)
@@ -27,8 +27,8 @@ def signupuser(request):
 
 
 def loginuser(request):
-    if request.user.is_authenticated:
-        return redirect(to='contacts:start_page')
+    # if request.user.is_authenticated:
+    #     return redirect(to='contacts:start_page')
 
     if request.method == 'POST':
         user = authenticate(username=request.POST['username'], password=request.POST['password'])

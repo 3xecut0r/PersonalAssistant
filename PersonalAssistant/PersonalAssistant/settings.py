@@ -29,8 +29,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG')
 
-ALLOWED_HOSTS = ['65fa-77-65-104-119.ngrok-free.app', 'localhost']
-
+ALLOWED_HOSTS = ['a0f2-77-65-104-119.ngrok-free.app', 'localhost', '127.0.0.1']
 
 # LOGIN_URL = "/fake-login/"
 
