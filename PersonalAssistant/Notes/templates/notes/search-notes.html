@@ -1,0 +1,35 @@
+<!-- templates/notes/search_notes.html -->
+{% extends 'notes/base.html' %}
+
+
+{% block content %}
+<h1>Search Notes</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Search">
+</form>
+
+{% if page_obj.object_list %}
+<p>We have notes!</p>
+<ul>
+    {% for note in page_obj.object_list %}
+    <li>
+        {{ note }}
+        <br>User: {{ note.user.username }}
+        <br>Tags:
+        {% for tag in note.tags.all %}
+        {{ tag.name }}{% if not forloop.last %}, {% endif %}
+        {% endfor %}
+        <br>
+        <a href="{% url 'notes:edit' note.id %}">Edit</a>
+        |
+        <a href="{% url 'notes:remove' note.id %}"
+            onclick="return confirm('Are you sure you want to delete this note?');">Delete</a>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No matching results found.</p>
+{% endif %}
+{% endblock %}
