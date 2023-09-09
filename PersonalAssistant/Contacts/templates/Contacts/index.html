@@ -1,0 +1,73 @@
+{% extends "Contacts/base.html" %}
+
+{% block content %}
+
+    <div class="position-absolute top-0 end-0 mt-5 me-3">
+        <div class="container mt-5">
+            <h4><a href="{% url 'get_weather' %}" style="text-decoration: none; color: inherit;">Weather</a></h4>
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th>City: </th>
+                        <td>{{ city }}</td>
+                    </tr>
+                    <tr>
+                        <th>County: </th>
+                        <td>{{ country }}</td>
+                    </tr>
+                    <tr>
+                        <th>Temperature: </th>
+                        <td>{{ temp }}&deg;C</td>
+                    </tr>
+                    <tr>
+                        <th>Feels like: </th>
+                        <td>{{ app_temp }}&deg;C</td>
+                    </tr>
+                    <tr>
+                        <th>Air Quality Index: </th>
+                        <td>{{ aqi }}</td>
+                    </tr>
+                    <tr>
+                        <th>Wind speed: </th>
+                        <td>{{ wind_spd }} m/s</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card" style="width: 18rem;">
+      <a class="nav-link active" href="#">
+      <div class="card-body">
+        <h5 class="card-title">Contacts</h5>
+        <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
+        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+      </div>
+      </a>
+    </div>
+    <br>
+
+    <div class="card" style="width: 18rem;">
+      <a class="nav-link active" href="#">
+      <div class="card-body">
+        <h5 class="card-title">Notes</h5>
+        <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
+        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+      </div>
+      </a>
+    </div>
+
+    <br>
+    <div class="card" style="width: 18rem;">
+      <a class="nav-link active" href="#">
+      <div class="card-body">
+        <h5 class="card-title">Files</h5>
+        <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
+        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+      </div>
+      </a>
+    </div>
+
+
+{% endblock %}
+
