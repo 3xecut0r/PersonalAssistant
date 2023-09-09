@@ -19,8 +19,9 @@ from django.urls import path, include
 
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
-    # path('', include('Utils.urls')),
-    path("", include("Contacts.urls")),
+    path('admin/', admin.site.urls),
+    path('utils/', include('Utils.urls')),
+    path('', include('Contacts.urls')),
+    path('', include('Users.urls'))
     path("notes/", include("Notes.urls", namespace="notes")),
 ]

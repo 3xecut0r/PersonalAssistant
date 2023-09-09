@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Images</title>
+</head>
+<body>
+    <h2>Images list:</h2>
+    {% for href in href_list %}
+        <div>
+            <img src='{{ href }}' alt="Картинка" class="img-responsive" width="178px">
+        </div>
+    {% endfor %}
+</body>
+</html>
