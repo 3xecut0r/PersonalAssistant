@@ -1,31 +1,103 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Contact List</title>
-</head>
-<body>
-    <h2>Contact List</h2>
-    <ul>
-        {% for contact in contacts %}
-            <li>
-                {{ contact.name }} - {{ contact.phone_number }} - {{ contact.email }}
-            </li>
-            <li>
-                Days left to birthday: {{ contact.days_until_birthday }} days
-            </li>
-            <p>{{ contact.name }} - <a href="{% url 'contacts:edit_contact' contact.id %}">Редактировать контакт</a></p>
-        {% empty %}
-            <li>No contacts found</li>
-        {% endfor %}
-    </ul>
-</body>
-</html>
+{% extends "Contacts/base.html" %}
 
+{% block content %}
+<style>
+    .contact-card {
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 15px;
+        margin: 10px;
+        display: inline-block;
+        width: 300px;
+    }
 
+    h2 {
+        font-size: 24px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+    }
 
+    .action-buttons {
+        margin-left: auto; /* Переместить кнопки вправо */
+    }
 
+    .action-buttons button {
+        margin-left: 10px;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px;
+        background-color: #007bff; /* Цвет кнопок */
+        color: #fff;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s;
+    }
 
+    .action-buttons button:hover {
+        background-color: #0056b3; /* Цвет кнопок при наведении курсора */
+    }
 
+    ul {
+        list-style-type: none;
+        padding: 0;
+    }
 
+    li {
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
 
+    a {
+        text-decoration: none;
+        color: #007bff; /* Цвет ссылки */
+    }
+
+    a:hover {
+        text-decoration: underline; /* Подчеркивание ссылки при наведении курсора */
+    }
+
+    p {
+        font-size: 16px;
+        margin-top: 10px;
+    }
+
+    /* Стили для "No contacts found" сообщения */
+    .empty-message {
+        font-style: italic;
+        color: #999;
+    }
+</style>
+
+<h2>Contact List
+    <div class="action-buttons">
+        <button><a style='text-decoration: none; color: inherit;' href="{% url 'contacts:add_contact' %}">Add Contact</a></button>
+        <button><a style='text-decoration: none; color: inherit;' href="{% url 'contacts:contact_search' %}">Search Contact</a></button>
+    </div>
+</h2>
+<div>
+    {% for contact in contacts %}
+        <div class="contact-card">
+            <ul>
+                <li>
+                    {{ contact.name }}
+                </li>
+                <li>
+                    Phone: {{ contact.phone_number }}
+                </li>
+                <li>
+                    Email: {{ contact.email }}
+                </li>
+                <li>
+                    Days left to birthday: {{ contact.days_until_birthday }} days
+                </li>
+            </ul>
+            <p><a href="{% url 'contacts:edit_contact' contact.id %}">Edit</a></p>
+            <p><a href="{% url 'contacts:delete_contact' contact.id %}">Remove</a></p>
+        </div>
+    {% empty %}
+        <div class="empty-message">No contacts found</div>
+    {% endfor %}
+</div>
+{% endblock %}
 

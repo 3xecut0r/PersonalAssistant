@@ -13,6 +13,7 @@ faker = "*"
 cloudinary = "*"
 python-dotenv = "*"
 dropbox = "*"
+phonenumbers = "*"
 
 [dev-packages]
 

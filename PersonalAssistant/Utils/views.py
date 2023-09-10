@@ -39,6 +39,10 @@ extensions = {'Images': ['jpeg', 'png', 'jpg', 'svg'],
 access_token = os.environ.get('ACCESS_TOKEN')
 
 
+def main_page(request):
+    return render(request, 'Utils/main_page.html')
+
+
 def get_current_datetime_string():
     current_datetime = datetime.now()
     return current_datetime.strftime("%Y-%m-%d--%H-%M-%S__")
@@ -76,12 +80,11 @@ def create_dropbox_folders(request, user_id):
 @login_required
 def upload_files(request):
 
-
     if request.method == 'POST':
         uploaded_file = request.FILES['file']
 
         if uploaded_file.size > 128 * 1024 * 1024:
-            return HttpResponse("Файл більше 128 МБ. Завантаження не дозволено.")
+            return HttpResponse("The file is larger than 128 MB. Downloading is not allowed.")
 
         fs = FileSystemStorage()
         filename = fs.save(f'Utils/files_to_upload/{uploaded_file}', uploaded_file)
@@ -119,7 +122,7 @@ def upload_files(request):
                     print('EMPTY!')
                 user_file = UploadedUserFiles(href=public_url.url, type=file, category=result, user=user)
                 user_file.save()
-                # os.remove(file_path)
+                os.remove(file_path)
                 return redirect('/base')
             except Exception as e:
                 print(e)

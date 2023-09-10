@@ -1,11 +1,23 @@
-<!-- templates/notes/add-tags.html -->
-{% extends 'notes/base.html' %}
+{% extends 'Contacts/base.html' %}
 
 {% block content %}
-<h1>Add Tag</h1>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Add">
-</form>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h1 class="card-title text-center">Add Tag</h1>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="{{ form.name.id_for_label }}">Tag Name:</label>
+                            <p class="ml-2">{{ form.name }}</p>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Add</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

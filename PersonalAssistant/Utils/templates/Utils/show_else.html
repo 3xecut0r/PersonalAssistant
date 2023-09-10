@@ -1,16 +1,48 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Another files</title>
-</head>
-<body>
-    <h2>Another files list:</h2>
-    {% for unknown in user_files %}
-    <div class="document-block">
-        <p>Document</p>
-        <a href="{% url 'utils:delete' unknown.id %}" role="button" class="contrast"> Delete </a>
-        <a href="{% url 'utils:download' unknown.id %}" role="button" class="contrast"> Download</a>
-    </div>
-    {% endfor %}
-</body>
-</html>
+{% extends "Contacts/base.html" %}
+{% load static %}
+{% block content %}
+<style>
+    .document-block {
+        max-width: 300px; /* Максимальная ширина блока */
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 20px;
+        margin: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .document-block img {
+        width: 178px;
+        margin-bottom: 10px;
+    }
+
+    .contrast {
+        display: inline-block;
+        padding: 10px 15px;
+        margin: 5px;
+        border: 1px solid #007bff;
+        border-radius: 5px;
+        background-color: #007bff;
+        color: #fff;
+        text-decoration: none;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .contrast:hover {
+        background-color: #0056b3;
+    }
+</style>
+
+<h2>Another files list:</h2>
+{% for unknown in user_files %}
+<div class="document-block">
+    <img src="{% static 'Utils/images/archive_image.jpg' %}" alt="Картинка" class="img-responsive" width="178px">
+    <a href="{% url 'utils:delete' unknown.id %}" role="button" class="contrast">Delete</a>
+    <a href="{% url 'utils:download' unknown.id %}" role="button" class="contrast">Download</a>
+</div>
+{% endfor %}
+{% endblock %}

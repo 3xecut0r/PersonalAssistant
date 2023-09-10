@@ -1,35 +1,63 @@
-<!-- templates/notes/search_notes.html -->
-{% extends 'notes/base.html' %}
-
+{% extends 'Contacts/base.html' %}
 
 {% block content %}
-<h1>Search Notes</h1>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Search">
-</form>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h1 class="card-title text-center">Search Notes</h1>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="{{ form.search.id_for_label }}">Search:</label>
+                            <p class="ml-2">{{ form.search }}</p>
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.include_tags.id_for_label }}">Include Tags:</label>
+                            <p class="ml-2">{{ form.include_tags }}</p>
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.exclude_tags.id_for_label }}">Exclude Tags:</label>
+                            <p class="ml-2">{{ form.exclude_tags }}</p>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Search</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 {% if page_obj.object_list %}
-<p>We have notes!</p>
-<ul>
-    {% for note in page_obj.object_list %}
-    <li>
-        {{ note }}
-        <br>User: {{ note.user.username }}
-        <br>Tags:
-        {% for tag in note.tags.all %}
-        {{ tag.name }}{% if not forloop.last %}, {% endif %}
-        {% endfor %}
-        <br>
-        <a href="{% url 'notes:edit' note.id %}">Edit</a>
-        |
-        <a href="{% url 'notes:remove' note.id %}"
-            onclick="return confirm('Are you sure you want to delete this note?');">Delete</a>
-    </li>
-    {% endfor %}
-</ul>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title text-center">Search Results</h2>
+                    <ul class="list-group">
+                        {% for note in page_obj.object_list %}
+                        <li class="list-group-item">
+                            {{ note }}
+                            <br>User: {{ note.user.username }}
+                            <br>Tags:
+                            {% for tag in note.tags.all %}
+                            {{ tag.name }}{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                            <br>
+                            <a href="{% url 'notes:edit' note.id %}" class="btn btn-warning btn-sm">Edit</a>
+                            <a href="{% url 'notes:remove' note.id %}"
+                                onclick="return confirm('Are you sure you want to delete this note?');" class="btn btn-danger btn-sm">Delete</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% else %}
-<p>No matching results found.</p>
+<p class="text-center mt-3">No matching results found.</p>
 {% endif %}
 {% endblock %}

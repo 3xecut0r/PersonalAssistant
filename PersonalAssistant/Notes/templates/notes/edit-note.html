@@ -1,11 +1,31 @@
-<!-- templates/notes/edit_note.html -->
-{% extends 'notes/base.html' %}
+{% extends 'Contacts/base.html' %}
 
 {% block content %}
-<h1>Edit Note</h1>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Save">
-</form>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h1 class="card-title text-center">Edit Note</h1>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="{{ form.title.id_for_label }}">Title:</label>
+                            <p class="ml-2">{{ form.title }}</p>
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.content.id_for_label }}">Content:</label>
+                            <p class="ml-2">{{ form.content }}</p>
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.tags.id_for_label }}">Tags:</label>
+                            <p class="ml-2">{{ form.tags }}</p>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

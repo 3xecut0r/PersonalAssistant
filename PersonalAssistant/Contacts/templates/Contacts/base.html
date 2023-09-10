@@ -10,17 +10,17 @@
 </head>
 <body>
     <nav class="navbar" style="background-color: lightblue;">
-        <form class="container-fluid justify-content-end">
-            <button class="btn btn-outline-success me-2" type="button">Profile</button>
-            <button class="btn btn-sm btn-outline-secondary" type="button">Logout</button>
-        </form>
+        <div class="container-fluid justify-content-end">
+            <button class="btn btn-outline-success me-2" type="button"><a style='text-decoration: none; color: inherit;' href="{% url 'contacts:start_page' %}">Profile</a></button>
+            <button class="btn btn-sm btn-outline-secondary" type="button"><a style='text-decoration: none; color: inherit;' href="{% url 'users:logout' %}">Logout</a></button>
+        </div>
     </nav>
     <br>
     <br>
     {% block content %}
     {% endblock %}
     <footer>
-        <p>&copy; 2023 Ваша компанія. Усі права захищено.</p>
+        <p>&copy; 2023 <b>Dushiteli_zmei</b>. All rights reserved by intergalactic alliance.</p>
     </footer>
 </body>
 </html>

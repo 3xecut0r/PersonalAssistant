@@ -14,5 +14,6 @@ urlpatterns = [
     path('authorize/', views.dropbox_oauth, name='dropbox_oauth'),
     path('authorized/', views.dropbox_authorized, name='dropbox_authorized'),
     path('weather/', views.weather_forcast, name="get_weather"),
+    path('utils_main_page/', views.main_page, name='main_page')
 ]
 

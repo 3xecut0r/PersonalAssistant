@@ -1,7 +1,6 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from .forms import ContactForm
-from django.shortcuts import render, HttpResponse
 from datetime import date, timedelta
 from .models import Contact
 from .forms import ContactDeleteForm
@@ -11,11 +10,12 @@ import requests
 from ipware import get_client_ip
 
 
+@login_required
 def start_page(request):
     context = {}
     return render(request, 'Contacts/index.html', context)
 
-
+# @login_required
 # def start_page(request):
 #     # weatherbit.io
 #     api_key = "e0968fa8d191445689837cc732013dd4"
@@ -50,35 +50,26 @@ def start_page(request):
 #         pass
 #     return render(request, 'Contacts/index.html')
 
-  
-def card_subtitle_view(request):
-    return render(request, 'Contacts/card_subtitle.html')
-
-
 
 @login_required
 def add_contact(request):
     if request.method == 'POST':
         form = ContactForm(request.POST)
         if form.is_valid():
-            form.save()
-            email = form.cleaned_data['email']
-            res = Contact.objects.get(email=email)
-            res.user_id = request.user.id
-            res.save()
-            return redirect('contacts:contact_list')  # Перенаправление на страницу со списком контактов
+            contact = form.save(commit=False)
+            contact.user = request.user
+            contact.save()
+            return redirect('contacts:contact_list')
     else:
         form = ContactForm()
     return render(request, 'contacts/add_contact.html', {'form': form})
 
 
-#поиск контактов среди контактов книги
 @login_required
 def contact_search(request):
-    query = request.GET.get('q')  # Получение поискового запроса из URL
+    query = request.GET.get('q')
 
     if query:
-        # Если есть поисковый запрос, выполните поиск в модели Contact
         results = Contact.objects.filter(name__icontains=query, user_id=request.user.id)
     else:
         results = []
@@ -90,8 +81,6 @@ def contact_search(request):
     return render(request, 'contacts/contact_search.html', context)
 
 
-# редактирование контактов
-
 @login_required
 def edit_contact(request, contact_id):
     contact = get_object_or_404(Contact, id=contact_id)
@@ -100,37 +89,18 @@ def edit_contact(request, contact_id):
         form = ContactForm(request.POST, instance=contact)
         if form.is_valid():
             form.save()
-            return redirect('contacts:contact_list')  # Перенаправление на страницу со списком контактов
+            return redirect('contacts:contact_list')
     else:
         form = ContactForm(instance=contact)
 
     return render(request, 'contacts/edit_contact.html', {'form': form})
 
+
 @login_required
 def delete_contact(request, contact_id):
-    contact = get_object_or_404(Contact, id=contact_id)
-
-    if request.method == 'POST':
-        form = ContactDeleteForm(request.POST)
-        if form.is_valid():
-            contact.delete()
-            return redirect('contacts:contact_list')  # Перенаправление на страницу со списком контактов
-    else:
-        form = ContactDeleteForm()
-
-    return render(request, 'contacts/delete_contact.html', {'contact': contact, 'form': form})
-
-
-# список всех контактов из базы данных
-# def contact_list(request):
-    
-#     contacts = Contact.objects.all()
-
-#     context = {
-#         'contacts': contacts,
-#     }
-
-#     return render(request, 'contacts/contact_list.html', context)
+    contact = Contact.objects.get(id=contact_id)
+    contact.delete()
+    return redirect('contacts:contact_list')
 
 
 @login_required
@@ -146,9 +116,6 @@ def contact_list(request):
     return render(request, 'contacts/contact_list.html', context)
 
 
-
-
-
 def days_until_birthday(birthday):
     today = date.today()
     next_birthday = birthday.replace(year=today.year)
@@ -156,4 +123,3 @@ def days_until_birthday(birthday):
         next_birthday = next_birthday.replace(year=today.year + 1)
     days_left = (next_birthday - today).days
     return days_left
-

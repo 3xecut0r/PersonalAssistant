@@ -1,16 +1,54 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Images</title>
-</head>
-<body>
-    <h2>Images list:</h2>
-    {% for image in user_images %}
-        <div>
-            <img src='{{ image.href }}' alt="Картинка" class="img-responsive" width="178px">
-            <a href="{% url 'utils:delete' image.id %}" role="button" class="contrast"> Delete </a>
-            <a href="{% url 'utils:download' image.id %}" role="button" class="contrast"> Download</a>
+{% extends "Contacts/base.html" %}
+{% load static %}
+{% block content %}
+<style>
+    .image-card {
+        max-width: 300px; /* Максимальная ширина карточки */
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 10px;
+        margin: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .image-card img {
+        width: 178px;
+        margin-bottom: 10px;
+    }
+
+    .button-container {
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
+    }
+
+    .button-container a {
+        padding: 10px 15px;
+        border: 1px solid #007bff;
+        border-radius: 5px;
+        background-color: #007bff;
+        color: #fff;
+        text-decoration: none;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .button-container a:hover {
+        background-color: #0056b3;
+    }
+</style>
+
+<h2>Images list:</h2>
+{% for image in user_images %}
+    <div class="image-card">
+        <img src="{{ image.href }}" alt="Картинка" class="img-responsive" width="178px">
+        <div class="button-container">
+            <a href="{% url 'utils:delete' image.id %}" role="button">Delete</a>
+            <a href="{% url 'utils:download' image.id %}" role="button">Download</a>
         </div>
-    {% endfor %}
-</body>
-</html>
+    </div>
+{% endfor %}
+{% endblock %}

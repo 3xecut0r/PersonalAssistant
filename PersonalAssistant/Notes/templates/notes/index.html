@@ -1,10 +1,26 @@
-<!-- templates/main.html -->
-{% extends 'notes/base.html' %}
+{% extends 'Contacts/base.html' %}
 
 {% block content %}
-<h1>Welcome to your Notes</h1>
-<p><a href="{% url 'notes:add-note' %}">Add Note</a></p>
-<p><a href="{% url 'notes:add-tags' %}">Add Tags</a></p>
-<p><a href="{% url 'notes:search-notes' %}">Search Notes</a></p>
-
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h1 class="card-title text-center">Welcome to your Notes</h1>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item text-center">
+                            <a href="{% url 'notes:add-note' %}" class="btn btn-primary btn-block">Add Note</a>
+                        </li>
+                        <li class="list-group-item text-center">
+                            <a href="{% url 'notes:add-tags' %}" class="btn btn-success btn-block">Add Tags</a>
+                        </li>
+                        <li class="list-group-item text-center">
+                            <a href="{% url 'notes:search-notes' %}" class="btn btn-info btn-block">Search Notes</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

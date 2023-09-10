@@ -1,36 +1,87 @@
 {% extends "Users/base.html" %}
 
 {% block content %}
+<style>
+    .center-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+    }
 
-<div>
-    <h2>Sign Up</h2>
+    form {
+        width: 300px;
+        padding: 20px;
+        border: 1px solid #ccc;
+        background-color: #f9f9f9;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    form label {
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    form input[type="text"],
+    form input[type="password"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    form .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    form button {
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    form .secondary {
+        background-color: #ccc;
+        color: #333;
+    }
+</style>
+
+<div class="center-container">
+    <div>
+        <h2>Sign Up</h2>
+    </div>
+
+    <form method="post" action="{% url 'users:signup' %}">
+        {% csrf_token %}
+        <div>
+            <label>Username:
+                {{ form.username }}
+            </label>
+            <span>{{ form.errors.username }}</span>
+        </div>
+        <br>
+        <div>
+            <label>Password:
+                {{ form.password1 }}
+            </label>
+            <span>{{ form.errors.password1 }}</span>
+        </div>
+        <div>
+            <label>Password confirmation:
+                {{ form.password2 }}
+            </label>
+            <span>{{ form.errors.password2 }}</span>
+        </div>
+        <div class="grid">
+            <button type="submit">Submit</button>
+            <button type="reset" class="secondary">Reset</button>
+        </div>
+    </form>
 </div>
-
-<form method="post" action="{% url 'users:signup' %}">
-    {% csrf_token %}
-    <div>
-        <label> Username:
-            {{ form.username }}
-        </label>
-        <span>{{ form.errors.username }}</span>
-    </div>
-    <br>
-    <div>
-        <label> Password:
-            {{ form.password1 }}
-        </label>
-        <span>{{ form.errors.password1 }}</span>
-    </div>
-    <div>
-        <label> Password confirmation:
-            {{ form.password2 }}
-        </label>
-        <span>{{ form.errors.password2 }}</span>
-    </div>
-    <div class="grid">
-        <button type="submit">Submit</button>
-        <button type="reset" class="secondary">Reset</button>
-    </div>
-</form>
-
 {% endblock %}
