@@ -44,7 +44,7 @@
 <h2>Images list:</h2>
 {% for image in user_images %}
     <div class="image-card">
-        <img src="{{ image.href }}" alt="Картинка" class="img-responsive" width="178px">
+        <a href="{{ image.href }}"><img src="{{ image.href }}" alt="image" class="img-responsive" width="178px"></a>
         <div class="button-container">
             <a href="{% url 'utils:delete' image.id %}" role="button">Delete</a>
             <a href="{% url 'utils:download' image.id %}" role="button">Download</a>

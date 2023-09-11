@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 from dotenv import load_dotenv
 
+
 load_dotenv()
 import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -29,7 +30,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG')
 
-ALLOWED_HOSTS = ['a0f2-77-65-104-119.ngrok-free.app', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['*']
 
 # LOGIN_URL = "/fake-login/"
 
@@ -95,6 +96,36 @@ DATABASES = {
     }
 }
 
+# REDIS_URL = 'redis://redis-13477.c293.eu-central-1-1.ec2.cloud.redislabs.com:13477/1'
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://:vRFRl1Ub2bWgMve6QsMmfap1y4Bw9vSY@redis-13477.c293.eu-central-1-1.ec2.cloud.redislabs.com:13477",
+
+        # Укажите ваши данные:
+        "HOST": "redis-13477.c293.eu-central-1-1.ec2.cloud.redislabs.com",  # Адрес сервера Redis
+        "PORT": "13477",      # Порт сервера Redis
+        "DB": "1",    # Номер базы данных (обычно 0)
+
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django_redis.cache.RedisCache',
+#         'LOCATION': 'redis://redis-13477.c293.eu-central-1-1.ec2.cloud.redislabs.com:13477',
+#         'USERNAME': 'default',
+#         'PASSWORD': 'vRFRl1Ub2bWgMve6QsMmfap1y4Bw9vSY',
+#         'OPTIONS': {
+#             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+#         }
+#     }
+# }
+
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
@@ -135,3 +166,16 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = os.environ.get('EMAIL_HOST')
+EMAIL_PORT = os.environ.get('EMAIL_PORT')
+EMAIL_STARTTLS = False
+EMAIL_USE_SSL = True
+EMAIL_USE_TLS = False
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+CSRF_TRUSTED_ORIGINS = ['https://1cb3-77-65-104-119.ngrok-free.app']

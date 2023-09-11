@@ -40,7 +40,7 @@
 <h2>Another files list:</h2>
 {% for unknown in user_files %}
 <div class="document-block">
-    <img src="{% static 'Utils/images/archive_image.jpg' %}" alt="Картинка" class="img-responsive" width="178px">
+    <a href="{{ unknown.href }}"><img src="{% static 'Utils/images/archive_image.jpg' %}" alt="Картинка" class="img-responsive" width="178px"></a>
     <a href="{% url 'utils:delete' unknown.id %}" role="button" class="contrast">Delete</a>
     <a href="{% url 'utils:download' unknown.id %}" role="button" class="contrast">Download</a>
 </div>

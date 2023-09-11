@@ -14,6 +14,8 @@ cloudinary = "*"
 python-dotenv = "*"
 dropbox = "*"
 phonenumbers = "*"
+django-redis = "*"
+redis = "*"
 
 [dev-packages]
 

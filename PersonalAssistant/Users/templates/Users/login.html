@@ -77,6 +77,9 @@
                 {{ form.password }}
             </label>
         </div>
+        <div>
+            <a href="{% url 'users:password_reset' %}" class="text-center"><i>Forgot Password?</i></a>
+        </div>
 
         <div class="grid">
             <button type="submit">Submit</button>

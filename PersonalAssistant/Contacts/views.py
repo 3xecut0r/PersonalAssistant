@@ -4,51 +4,80 @@ from .forms import ContactForm
 from datetime import date, timedelta
 from .models import Contact
 from .forms import ContactDeleteForm
+from django.core.cache import cache
 
+
+import os
 import json
 import requests
 from ipware import get_client_ip
+from dotenv import load_dotenv
+
+load_dotenv()
+
+# @login_required
+# def start_page(request):
+#     context = {}
+#     return render(request, 'Contacts/index.html', context)
+
+
+def set_userdata(request, data):
+    key = f"user{request.user.id}_data"
+    cache.set(key, data)
+
+
+def get_userdata(request):
+    key = f"user{request.user.id}_data"
+    return cache.get(key)
 
 
 @login_required
 def start_page(request):
-    context = {}
-    return render(request, 'Contacts/index.html', context)
-
-# @login_required
-# def start_page(request):
-#     # weatherbit.io
-#     api_key = "e0968fa8d191445689837cc732013dd4"
-#     client_ip, is_routable = get_client_ip(request)
-#     if client_ip:
-#         request_url = f'https://geolocation-db.com/jsonp/{client_ip}'
-#         response = requests.get(request_url)
-#         result = response.content.decode()
-#         result = result.split("(")[1].strip(")")
-#         result = json.loads(result)
-#         if response:
-#             latitude = result.get('latitude')
-#             longitude = result.get('longitude')
-#             url = f'https://api.weatherbit.io/v2.0/current?lat={latitude}&lon={longitude}&key={api_key}'
-#             try:
-#                 data = requests.get(url).json()
-#                 city_name = data['data'][0]['city_name']
-#                 country_code = data['data'][0]['country_code']
-#                 wind_spd = data['data'][0]['wind_spd']
-#                 app_temp = data['data'][0]['app_temp']
-#                 aqi = data['data'][0]['aqi']
-#                 temp = data['data'][0]['temp']
-#
-#                 context = {'city': city_name, 'country': country_code, 'wind_spd': wind_spd, 'app_temp': app_temp,
-#                            'aqi': aqi, 'temp': temp}
-#             except Exception as e:
-#                 return HttpResponse({'status': str(e)})
-#             return render(request, 'Contacts/index.html', context)
-#         else:
-#             pass
-#     else:
-#         pass
-#     return render(request, 'Contacts/index.html')
+    cache_key = f"user_weather_data:{request.user.id}"
+    cached_data = cache.get(cache_key)
+    if cached_data:
+        data = json.loads(cached_data)
+        city_name = data['data'][0]['city_name']
+        country_code = data['data'][0]['country_code']
+        wind_spd = data['data'][0]['wind_spd']
+        app_temp = data['data'][0]['app_temp']
+        aqi = data['data'][0]['aqi']
+        temp = data['data'][0]['temp']
+        context = {'city': city_name, 'country': country_code, 'wind_spd': wind_spd, 'app_temp': app_temp,
+                   'aqi': aqi, 'temp': temp}
+        return render(request, 'Contacts/index.html', context)
+    else:
+        try:
+            # weatherbit.io
+            api_key = os.environ.get('API_WEATHER')
+            client_ip, is_routable = get_client_ip(request)
+            api = os.environ.get('API_IPSTACK')
+            if client_ip:
+                request_url = f'http://api.ipstack.com/{client_ip}?access_key={api}'
+                response = requests.get(request_url)
+                result = response.content.decode()
+                result = json.loads(result)
+                if response:
+                    latitude = result.get('latitude')
+                    longitude = result.get('longitude')
+                    url = f'https://api.weatherbit.io/v2.0/current?lat={latitude}&lon={longitude}&key={api_key}'
+                    try:
+                        data = requests.get(url).json()
+                        city_name = result.get('city')
+                        country_code = data['data'][0]['country_code']
+                        wind_spd = data['data'][0]['wind_spd']
+                        app_temp = data['data'][0]['app_temp']
+                        aqi = data['data'][0]['aqi']
+                        temp = data['data'][0]['temp']
+                        cache.set(cache_key, json.dumps(data), timeout=3600)
+                        context = {'city': city_name, 'country': country_code, 'wind_spd': wind_spd, 'app_temp': app_temp,
+                                   'aqi': aqi, 'temp': temp}
+                    except Exception as e:
+                        return HttpResponse({'status': str(e)})
+                    return render(request, 'Contacts/index.html', context)
+        except Exception as e:
+            return HttpResponse({'status': str(e)})
+    return render(request, 'Contacts/index.html')
 
 
 @login_required
@@ -123,3 +152,6 @@ def days_until_birthday(birthday):
         next_birthday = next_birthday.replace(year=today.year + 1)
     days_left = (next_birthday - today).days
     return days_left
+
+
+

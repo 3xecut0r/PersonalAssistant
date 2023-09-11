@@ -254,17 +254,17 @@ def get_day_of_week(date_str):
 
 
 def weather_forcast(request):
-    api_ = "e0968fa8d191445689837cc732013dd4"
+    api_key = os.environ.get('API_WEATHER')
     client_ip, is_routable = get_client_ip(request)
+    api = os.environ.get('API_IPSTACK')
     if client_ip:
-        request_url = f'https://geolocation-db.com/jsonp/{client_ip}'
+        request_url = f'http://api.ipstack.com/{client_ip}?access_key={api}'
         response = requests.get(request_url)
         result = response.content.decode()
-        result = result.split("(")[1].strip(")")
         result = json.loads(result)
         if response:
             city = result.get('city')
-            url = f'https://api.weatherbit.io/v2.0/forecast/daily?city={city}&key={api_}'
+            url = f'https://api.weatherbit.io/v2.0/forecast/daily?city={city}&key={api_key}'
             try:
                 data = requests.get(url).json()
                 weather_data = data['data']
