@@ -19,7 +19,7 @@ from Notes.models import Tag, Note
 def main(request):
     notes = Note.objects.filter(user=request.user)
     context = {"notes": notes}
-    return render(request, "Notes/index.html", context)
+    return render(request, "notes/index.html", context)
 
 
 @method_decorator(login_required, name="dispatch")

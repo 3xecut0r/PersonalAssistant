@@ -1,6 +1,19 @@
 {% extends "Contacts/base.html" %}
 
 {% block content %}
+    <style>
+        /* CSS для центрирования текста по верхней горизонтали */
+        .top-center {
+            position: absolute;
+            top: 2;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+    </style>
+
+    <div>
+        <h4 class="top-center mt-5">Hello, <i>{{ user_name }}</i>. It's your profile</h4>
+    </div>
 
     <div class="position-absolute top-0 end-0 mt-5 me-3">
         <div class="container mt-5">

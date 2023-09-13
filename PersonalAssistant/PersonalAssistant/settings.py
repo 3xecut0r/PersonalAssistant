@@ -32,6 +32,8 @@ DEBUG = os.environ.get('DEBUG')
 
 ALLOWED_HOSTS = ['*']
 
+CSRF_TRUSTED_ORIGINS = ['https://personalassistant.fly.dev']
+
 # LOGIN_URL = "/fake-login/"
 
 
@@ -178,4 +180,4 @@ EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
-CSRF_TRUSTED_ORIGINS = ['https://1cb3-77-65-104-119.ngrok-free.app']
+

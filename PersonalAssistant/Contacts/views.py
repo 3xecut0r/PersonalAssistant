@@ -5,6 +5,7 @@ from datetime import date, timedelta
 from .models import Contact
 from .forms import ContactDeleteForm
 from django.core.cache import cache
+from django.contrib.auth.models import User
 
 
 import os
@@ -33,6 +34,7 @@ def get_userdata(request):
 
 @login_required
 def start_page(request):
+    user_name = User.objects.get(id=request.user.id).username
     cache_key = f"user_weather_data:{request.user.id}"
     cached_data = cache.get(cache_key)
     if cached_data:
@@ -44,7 +46,7 @@ def start_page(request):
         aqi = data['data'][0]['aqi']
         temp = data['data'][0]['temp']
         context = {'city': city_name, 'country': country_code, 'wind_spd': wind_spd, 'app_temp': app_temp,
-                   'aqi': aqi, 'temp': temp}
+                   'aqi': aqi, 'temp': temp, 'user_name': user_name}
         return render(request, 'Contacts/index.html', context)
     else:
         try:
@@ -71,7 +73,7 @@ def start_page(request):
                         temp = data['data'][0]['temp']
                         cache.set(cache_key, json.dumps(data), timeout=3600)
                         context = {'city': city_name, 'country': country_code, 'wind_spd': wind_spd, 'app_temp': app_temp,
-                                   'aqi': aqi, 'temp': temp}
+                                   'aqi': aqi, 'temp': temp, 'user_name': user_name}
                     except Exception as e:
                         return HttpResponse({'status': str(e)})
                     return render(request, 'Contacts/index.html', context)
@@ -91,7 +93,7 @@ def add_contact(request):
             return redirect('contacts:contact_list')
     else:
         form = ContactForm()
-    return render(request, 'contacts/add_contact.html', {'form': form})
+    return render(request, 'Contacts/add_contact.html', {'form': form})
 
 
 @login_required
@@ -107,7 +109,7 @@ def contact_search(request):
         'query': query,
         'results': results,
     }
-    return render(request, 'contacts/contact_search.html', context)
+    return render(request, 'Contacts/contact_search.html', context)
 
 
 @login_required
@@ -122,7 +124,7 @@ def edit_contact(request, contact_id):
     else:
         form = ContactForm(instance=contact)
 
-    return render(request, 'contacts/edit_contact.html', {'form': form})
+    return render(request, 'Contacts/edit_contact.html', {'form': form})
 
 
 @login_required
@@ -142,7 +144,7 @@ def contact_list(request):
         'contacts': contacts,
     }
 
-    return render(request, 'contacts/contact_list.html', context)
+    return render(request, 'Contacts/contact_list.html', context)
 
 
 def days_until_birthday(birthday):

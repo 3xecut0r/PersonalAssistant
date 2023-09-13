@@ -39,7 +39,8 @@
     <h2>Documents list:</h2>
     {% for document in user_documents %}
     <div class="document-block">
-        <img src="{% static 'Utils/images/document_image.jpg' %}" alt="Картинка" class="img-responsive" width="178px">
+        <h3>{{ document.type }}</h3>
+        <a href="{{ document.href }}"><img src="{% static 'Utils/images/document_image.jpg' %}" alt="Картинка" class="img-responsive" width="178px"></a>
         <a href="{% url 'utils:delete' document.id %}" role="button" class="contrast"> Delete </a>
         <a href="{% url 'utils:download' document.id %}" role="button" class="contrast"> Download</a>
     </div>

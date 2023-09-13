@@ -24,7 +24,7 @@ load_dotenv()
 
 DROPBOX_APP_KEY = os.environ.get("DROPBOX_APP_KEY")
 DROPBOX_APP_SECRET = os.environ.get("DROPBOX_APP_SECRET")
-REDIRECT_URL = 'http://127.0.0.1:8000/utils/'
+REDIRECT_URL = 'https://personalassistant.fly.dev/utils/'
 
 cloudinary.config(
   cloud_name=os.environ.get('cloud_name'),
@@ -153,11 +153,15 @@ def show_user_unknown(request):
 @login_required
 def remove_user_file(request, file_id):
         dbx = get_access_dbx(request)
+        print(dbx)
         file = UploadedUserFiles.objects.get(id=file_id)
         category = file.category
         path = f'/User_{file.user_id}/{file.category}/{file.type}'
         print(path)
-        dbx.files_delete_v2(f'/User_{file.user_id}/{file.category}/{file.type}')
+        try:
+            dbx.files_delete_v2(f'/User_{file.user_id}/{file.category}/{file.type}')
+        except Exception as e:
+            print(e)
         file.delete()
         if category == "Images":
             return redirect('utils:show_images')

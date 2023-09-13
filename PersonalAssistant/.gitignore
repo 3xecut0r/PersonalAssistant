@@ -153,8 +153,9 @@ dmypy.json
 cython_debug/
 
 # files
-.idea/
+../.idea/
 .xml
+.env
 
 # PyCharm
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
