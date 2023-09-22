@@ -1,12 +1,12 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
-from .forms import ContactForm
+from .forms import ContactForm, FeedbackForm
 from datetime import date, timedelta
 from .models import Contact
 from .forms import ContactDeleteForm
 from django.core.cache import cache
 from django.contrib.auth.models import User
-
+from envelopes import Envelope
 
 import os
 import json
@@ -15,6 +15,7 @@ from ipware import get_client_ip
 from dotenv import load_dotenv
 
 load_dotenv()
+
 
 # @login_required
 # def start_page(request):
@@ -156,4 +157,25 @@ def days_until_birthday(birthday):
     return days_left
 
 
+def send_feedback(request):
+    if request.method == 'POST':
+        form = FeedbackForm(request.POST)
+        if form.is_valid():
+            envelope = Envelope(
+                from_addr=os.environ.get("EMAIL_HOST_USER"),
+                to_addr=(u'panpukhaa@gmail.com', u'To Example'),
+                subject=form.cleaned_data['subject'],
+                text_body=form.cleaned_data['message']
+            )
+            envelope.send(os.environ.get("EMAIL_HOST"), login=os.environ.get("EMAIL_HOST_USER"),
+                          password=os.environ.get("EMAIL_HOST_PASSWORD"), tls=True)
+            # send_mail(subject, message, sender_email, recipient_list, fail_silently=False)
+            return redirect('contacts:feedback_success')
+    else:
+        form = FeedbackForm()
 
+    return render(request, 'Contacts/feedback.html', {'form': form})
+
+
+def feedback_success(request):
+    return render(request, 'Contacts/feedback_success.html')

@@ -19,4 +19,6 @@ urlpatterns = [
     path('delete_contact/<int:contact_id>/', delete_contact, name='delete_contact'),
     path('contacts/', contact_list, name='contact_list'),
     path('contact_search/', views.contact_search, name='contact_search'),
+    path('feedback/', views.send_feedback, name='send_feedback'),
+    path('feedback/success/', views.feedback_success, name='feedback_success'),
 ]
