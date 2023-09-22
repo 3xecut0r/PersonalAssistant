@@ -2,7 +2,6 @@ import os
 import json
 import dropbox
 import cloudinary.uploader
-from cloudinary import api
 from django.contrib.auth.decorators import login_required
 from django.core.files.storage import FileSystemStorage
 from django.contrib.auth.models import User
@@ -13,7 +12,6 @@ from dotenv import load_dotenv
 from .models import UploadedUserFiles
 
 
-from dropbox.exceptions import AuthError
 import requests
 from django.http import JsonResponse, FileResponse, HttpResponse
 from ipware import get_client_ip
@@ -71,7 +69,7 @@ def create_dropbox_folders(request, user_id):
     user_1_folder_path = f'/User_{user_id}'
     try:
         dbx.files_create_folder(user_1_folder_path)
-        response = cloudinary.api.create_folder(f'User_{user_id}')
+        cloudinary.api.create_folder(f'User_{user_id}')
         print(f'Створено папку {user_1_folder_path}')
     except dropbox.exceptions.ApiError as e:
         print(f'Помилка при створенні папки {user_1_folder_path}: {e}')
@@ -87,7 +85,7 @@ def upload_files(request):
             return HttpResponse("The file is larger than 128 MB. Downloading is not allowed.")
 
         fs = FileSystemStorage()
-        filename = fs.save(f'Utils/files_to_upload/{uploaded_file}', uploaded_file)
+        fs.save(f'Utils/files_to_upload/{uploaded_file}', uploaded_file)
         full_path2 = os.path.join(os.getcwd(), 'Utils')
         full_path3 = os.path.join(full_path2, "files_to_upload")
         for file in os.listdir(full_path3):

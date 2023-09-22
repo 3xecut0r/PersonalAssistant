@@ -9,10 +9,25 @@
             left: 50%;
             transform: translateX(-50%);
         }
+        .centered {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
     </style>
 
     <div>
         <h4 class="top-center mt-5">Hello, <i>{{ user_name }}</i>. It's your profile</h4>
+    </div>
+
+    <div class="centered">
+        <div class="example">
+            <img src="{{ src }}" alt="image">
+            <h3>{{ title }}</h3>
+            <p>{{ text_ }}</p>
+            <p>Sourse: <a href="{{ href }}">...</a></p>
+        </div>
     </div>
 
     <div class="position-absolute top-0 end-0 mt-5 me-3">

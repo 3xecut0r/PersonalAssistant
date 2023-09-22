@@ -1,5 +1,4 @@
 import os
-import shutil
 from pydrive.auth import GoogleAuth, ServiceAccountCredentials
 from pydrive.drive import GoogleDrive
 
@@ -23,7 +22,7 @@ def exception(func):
         try:
             result = func(*args, **kwargs)
             return result
-        except Exception as e:
+        except Exception:
             print("Erorr")
     return wrapper
 
@@ -80,7 +79,7 @@ def get_files_links_in_folder(id_list: dict):
     file_links = []
     folders_list_id = [id for id in id_list.values()]
     for folder_id in folders_list_id:
-        folder = drive.CreateFile({'id': folder_id})
+        drive.CreateFile({'id': folder_id})
         file_list = drive.ListFile({'q': f"'{folder_id}' in parents"}).GetList()
         for file in file_list:
             file_links.append({

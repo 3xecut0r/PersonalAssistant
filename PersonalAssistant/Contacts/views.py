@@ -1,13 +1,11 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from .forms import ContactForm, FeedbackForm
-from datetime import date, timedelta
+from datetime import date
 from .models import Contact
-from .forms import ContactDeleteForm
 from django.core.cache import cache
 from django.contrib.auth.models import User
 
-import requests
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -22,12 +20,6 @@ from ipware import get_client_ip
 from dotenv import load_dotenv
 
 load_dotenv()
-
-
-# @login_required
-# def start_page(request):
-#     context = {}
-#     return render(request, 'Contacts/index.html', context)
 
 
 def set_userdata(request, data):
@@ -54,7 +46,8 @@ def start_page(request):
         aqi = data['data'][0]['aqi']
         temp = data['data'][0]['temp']
         context = {'city': city_name, 'country': country_code, 'wind_spd': wind_spd, 'app_temp': app_temp,
-                   'aqi': aqi, 'temp': temp, 'user_name': user_name}
+                                   'aqi': aqi, 'temp': temp, 'user_name': user_name, 'src': data['src'],
+                                   'title': data['title'], 'text': data['text_'], 'href': data['href']}
         return render(request, 'Contacts/index.html', context)
     else:
         try:
@@ -79,9 +72,11 @@ def start_page(request):
                         app_temp = data['data'][0]['app_temp']
                         aqi = data['data'][0]['aqi']
                         temp = data['data'][0]['temp']
-                        cache.set(cache_key, json.dumps(data), timeout=3600)
+                        news = get_wp_last_news()
                         context = {'city': city_name, 'country': country_code, 'wind_spd': wind_spd, 'app_temp': app_temp,
-                                   'aqi': aqi, 'temp': temp, 'user_name': user_name}
+                                   'aqi': aqi, 'temp': temp, 'user_name': user_name, 'src': news['src'],
+                                   'title': news['title'], 'text': news['text_'], 'href': news['href']}
+                        cache.set(cache_key, json.dumps(context), timeout=3600)
                     except Exception as e:
                         return HttpResponse({'status': str(e)})
                     return render(request, 'Contacts/index.html', context)
@@ -182,6 +177,7 @@ def send_feedback(request):
         form = FeedbackForm()
 
     return render(request, 'Contacts/feedback.html', {'form': form})
+
 
 chrome_options = Options()
 chrome_options.add_argument('--headless')

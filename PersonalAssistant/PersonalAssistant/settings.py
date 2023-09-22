@@ -32,7 +32,7 @@ DEBUG = os.environ.get('DEBUG')
 
 ALLOWED_HOSTS = ['*']
 
-CSRF_TRUSTED_ORIGINS = ['https://personalassistant.fly.dev']
+CSRF_TRUSTED_ORIGINS = ['https://personalassistant.fly.dev', 'https://e589-77-65-92-170.ngrok-free.app']
 
 # LOGIN_URL = "/fake-login/"
 

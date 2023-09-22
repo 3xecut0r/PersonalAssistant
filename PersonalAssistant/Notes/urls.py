@@ -1,8 +1,6 @@
 from django.urls import path
-from django.contrib.auth.views import LoginView
 from . import views
 
-from django.http import HttpResponse
 
 
 # def fake_login(request):
