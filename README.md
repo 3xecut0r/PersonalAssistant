@@ -30,3 +30,11 @@ A comprehensive personal management Django application that helps you organize y
 1. Clone the repository:
 ```bash
 git clone https://github.com/3xecut0r/PersonalAssistant.git
+###
+🤝 Contributing:
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+📜 License:
+
+---
+
+You can simply copy and paste the section within the code block (between the backticks) into your README.md file. Modify links or specific details as needed.
