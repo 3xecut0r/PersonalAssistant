@@ -22,3 +22,8 @@ class ContactForm(forms.ModelForm):
 
 class ContactDeleteForm(forms.Form):
     pass
+
+
+class FeedbackForm(forms.Form):
+    subject = forms.CharField(max_length=100)
+    message = forms.CharField(widget=forms.Textarea)
