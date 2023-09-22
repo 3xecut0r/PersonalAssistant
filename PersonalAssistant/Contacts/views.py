@@ -6,6 +6,13 @@ from .models import Contact
 from .forms import ContactDeleteForm
 from django.core.cache import cache
 from django.contrib.auth.models import User
+
+import requests
+from bs4 import BeautifulSoup
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
+
 from envelopes import Envelope
 
 import os
@@ -176,6 +183,35 @@ def send_feedback(request):
 
     return render(request, 'Contacts/feedback.html', {'form': form})
 
+chrome_options = Options()
+chrome_options.add_argument('--headless')
+options = chrome_options
 
+
+def get_wp_last_news():
+    result = {}
+    driver = webdriver.Chrome(options=chrome_options)
+    driver.get('https://www.washingtonpost.com/')
+    res_search = driver.find_elements(By.ID, 'main-content')
+    find_blk = res_search[0].get_attribute('outerHTML')
+    soup = BeautifulSoup(find_blk, 'html.parser')
+    img = soup.find_all('div', class_="dib relative")
+    for i in img:
+        src = i.find('a')
+        res = src.find('img')['src']
+        result.update({'src': res})
+        break
+    links = soup.find_all('div', class_="card-left card-text next-to-art no-bottom")
+    for link in links:
+        title = link.find('h2').find('span').text
+        text_ = link.text
+        href = link.find('a', href=True)['href']
+        result.update({'title': title, 'text_': text_, 'href': href})
+        break
+    driver.quit()
+    return result
+
+  
 def feedback_success(request):
     return render(request, 'Contacts/feedback_success.html')
+
